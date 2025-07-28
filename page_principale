@@ -11,7 +11,7 @@
     </header>
 
     <footer class="text-center mt-12 text-sm text-gray-500">
-      <p>&copy; {new Date().getFullYear()} Cabinet Kiné</p>
+      <p>&copy;Cabinet Kiné</p>
     </footer>
   </body>
 </html>
