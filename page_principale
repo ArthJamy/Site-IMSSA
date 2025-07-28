@@ -1,8 +1,11 @@
+<script src="https://cdn.tailwindcss.com"></script>
+
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cabinet Kiné – Exercices</title>
+    <!-- Assure-toi d'inclure Tailwind CSS dans ton projet -->
   </head>
   <body class="prose mx-auto py-8">
     <header class="mb-12 text-center">
@@ -10,9 +13,40 @@
       <p class="mt-2 text-lg">Étirements, Renforcement, Réathlétisation</p>
     </header>
 
+    <!-- Section Étirements -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">Étirements</h2>
+      <div class="grid grid-cols-3 gap-6">
+        <div class="p-4 border rounded text-center">Membre inférieur</div>
+        <div class="p-4 border rounded text-center">Membre supérieur</div>
+        <div class="p-4 border rounded text-center">Colonne</div>
+      </div>
+    </section>
+
+    <!-- Section Renforcement -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">Renforcement</h2>
+      <div class="grid grid-cols-3 gap-6">
+        <div class="p-4 border rounded text-center">Membre inférieur</div>
+        <div class="p-4 border rounded text-center">Membre supérieur</div>
+        <div class="p-4 border rounded text-center">Colonne</div>
+      </div>
+    </section>
+
+    <!-- Section Réathlétisation -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">Réathlétisation</h2>
+      <div class="grid grid-cols-3 gap-6">
+        <div class="p-4 border rounded text-center">Haut du corps</div>
+        <div class="p-4 border rounded text-center">Bas du corps</div>
+        <div class="p-4 border rounded text-center">Cardio</div>
+      </div>
+    </section>
+
     <footer class="text-center mt-12 text-sm text-gray-500">
-      <p>&copy;Cabinet Kiné</p>
+      <p>&copy; Cabinet Kiné</p>
     </footer>
   </body>
 </html>
+
 
