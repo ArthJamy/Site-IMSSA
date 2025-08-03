@@ -32,25 +32,29 @@ body {
 }
 
 .site-nav {
-  margin-top: 1rem;
+  margin-top: 1.2rem;
   display: flex;
   justify-content: center;
-  gap: 1.5rem;
 }
 
 .site-nav a {
   text-decoration: none;
-  color: #3366cc;
-  font-weight: bold;
-  padding: 0.4em 0.8em;
-  border-radius: 5px;
-  transition: background-color 0.2s ease;
+  color: #5e3b8b;
+  background-color: #f3eaff;
+  padding: 0.4em 1em;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
 }
 
 .site-nav a:hover {
-  background-color: #eef3fc;
-  color: #224499;
+  background-color: #e0d1fa;
+  color: #3c2371;
+  transform: scale(1.03);
 }
+
 
 
 .grid {
