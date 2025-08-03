@@ -157,53 +157,53 @@
       <p>&copy; Cabinet Kiné</p>
     </footer>
       <script>
-    // Fonction pour récupérer les favoris depuis localStorage
-    function getFavoris() {
-      return JSON.parse(localStorage.getItem("favoris") || "[]");
-    }
-  
-    // Fonction pour sauvegarder les favoris dans localStorage
+      function getFavoris() {
+        return JSON.parse(localStorage.getItem("favoris") || "[]");
+      }
+    
       function saveFavoris(favoris) {
         localStorage.setItem("favoris", JSON.stringify(favoris));
       }
     
-      // Met à jour tous les boutons selon l’état des favoris
-      function updateAllButtons() {
+      function isInFavoris(id) {
         const favoris = getFavoris();
-        document.querySelectorAll(".fav-btn").forEach(btn => {
-          const id = btn.dataset.id;
-          if (favoris.some(f => f.id === id)) {
-            btn.textContent = "💔 Retirer";
-          } else {
-            btn.textContent = "❤️ Ajouter";
-          }
-        });
+        return favoris.some(item => item.id === id);
       }
     
-      // Initialisation des événements
+      function toggleFavori(id, label, button) {
+        let favoris = getFavoris();
+        const index = favoris.findIndex(f => f.id === id);
+    
+        if (index !== -1) {
+          favoris.splice(index, 1); // supprimer
+        } else {
+          favoris.push({ id, label }); // ajouter
+        }
+    
+        saveFavoris(favoris);
+        updateButton(button, id); // mettre à jour ce bouton seulement
+      }
+    
+      function updateButton(button, id) {
+        if (isInFavoris(id)) {
+          button.textContent = "💔 Retirer";
+        } else {
+          button.textContent = "❤️ Ajouter";
+        }
+      }
+    
+      // Initialiser chaque bouton indépendamment
       document.querySelectorAll(".fav-btn").forEach(button => {
         const id = button.dataset.id;
         const label = button.dataset.label;
     
+        updateButton(button, id); // état initial
+    
         button.addEventListener("click", () => {
-          let favoris = getFavoris();
-          const index = favoris.findIndex(f => f.id === id);
-    
-          if (index !== -1) {
-            // Supprimer le favori
-            favoris.splice(index, 1);
-          } else {
-            // Ajouter le favori
-            favoris.push({ id, label });
-          }
-    
-          saveFavoris(favoris);
-          updateAllButtons();
+          toggleFavori(id, label, button);
         });
       });
-    
-      // Mise à jour initiale à l’ouverture de la page
-      updateAllButtons();
     </script>
+
   </body>
 </html>
