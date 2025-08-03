@@ -75,3 +75,10 @@ iframe {
   text-decoration: none;
   color: #0077cc;
 }
+
+.video-links p {
+  margin: 0.5em 0 0.2em;
+  font-weight: bold;
+  color: #444;
+}
+
