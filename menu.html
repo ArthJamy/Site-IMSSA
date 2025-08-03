@@ -1,31 +1,45 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mon menu d’exercices</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <header class="site-header">
-      <h1>Mon menu d’exercices</h1>
-      <nav class="site-nav">
-        <a href="index.html">Accueil</a>
-      </nav>
-    </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mes favoris</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <h1>Mon menu d’exercices</h1>
+    <nav class="site-nav">
+      <a href="index.html">Accueil</a>
+    </nav>
+  </header>
 
-    <main class="site-content">
-      <p>Voici une sélection personnalisée d’exercices :</p>
-      <ul class="video-links">
-        <li><a href="video.html?id=ID_INF1">Étirement membre inférieur – Vidéo 1</a></li>
-        <li><a href="video.html?id=ID_RSUP2">Renforcement membre supérieur – Vidéo 2</a></li>
-        <li><a href="video.html?id=ID_CARD2">Cardio – Vidéo 2</a></li>
-        <li><a href="video.html?id=PLyG9IALZ75hyAAE0ELHSn9h6xq_cH-Z3t">Renforcement Colonne (playlist)</a></li>
-      </ul>
-    </main>
+  <main class="site-content">
+    <ul class="video-links" id="favoris-list">
+      <!-- Rempli dynamiquement -->
+    </ul>
+  </main>
 
-    <footer class="site-footer">
-      <p>&copy; Cabinet Kiné</p>
-    </footer>
-  </body>
+  <footer class="site-footer">
+    <p>&copy; Cabinet Kiné</p>
+  </footer>
+
+  <script>
+    const container = document.getElementById("favoris-list");
+    const favs = JSON.parse(localStorage.getItem("favoris") || "[]");
+
+    if (favs.length === 0) {
+      container.innerHTML = "<p>Aucun favori sélectionné pour l’instant.</p>";
+    } else {
+      favs.forEach(video => {
+        const li = document.createElement("li");
+        const link = document.createElement("a");
+        link.href = `video.html?id=${video.id}`;
+        link.textContent = video.label;
+        li.appendChild(link);
+        container.appendChild(li);
+      });
+    }
+  </script>
+</body>
 </html>
