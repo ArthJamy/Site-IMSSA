@@ -105,5 +105,39 @@
     <footer class="site-footer">
       <p>&copy; Cabinet Kiné</p>
     </footer>
+    <script>
+  const favs = JSON.parse(localStorage.getItem("favoris") || "[]");
+
+  function updateButtons() {
+    document.querySelectorAll(".fav-btn").forEach(btn => {
+      const id = btn.dataset.id;
+      if (favs.find(v => v.id === id)) {
+        btn.textContent = "💔 Retirer";
+      } else {
+        btn.textContent = "❤️ Ajouter";
+      }
+    });
+  }
+
+  document.querySelectorAll(".fav-btn").forEach(button => {
+    button.addEventListener("click", () => {
+      const id = button.dataset.id;
+      const label = button.dataset.label;
+
+      const index = favs.findIndex(v => v.id === id);
+      if (index !== -1) {
+        favs.splice(index, 1); // retirer
+      } else {
+        favs.push({ id, label });
+      }
+
+      localStorage.setItem("favoris", JSON.stringify(favs));
+      updateButtons();
+    });
+  });
+
+  updateButtons();
+</script>
+
   </body>
 </html>
