@@ -32,9 +32,26 @@ body {
 }
 
 .site-nav {
-  font-size: 2rem;
-  margin-bottom: 2rem;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
 }
+
+.site-nav a {
+  text-decoration: none;
+  color: #3366cc;
+  font-weight: bold;
+  padding: 0.4em 0.8em;
+  border-radius: 5px;
+  transition: background-color 0.2s ease;
+}
+
+.site-nav a:hover {
+  background-color: #eef3fc;
+  color: #224499;
+}
+
 
 .grid {
   display: grid;
