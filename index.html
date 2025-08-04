@@ -7,6 +7,15 @@
   </head>
   <body>
     <header class="site-header">
+      <div class="user-panel">
+        <label for="username">Utilisateur :</label>
+        <input type="text" id="username" placeholder="Entrez votre nom" />
+        <button id="save-user">✔️</button>
+        <button id="export-favs">Exporter favoris</button>
+        <button id="import-favs">Importer favoris</button>
+        <textarea id="import-area" placeholder="Collez ici vos favoris JSON"></textarea>
+      </div>
+
       <h1>Exercices en ligne</h1>
       <p>Étirements, Renforcement, Réathlétisation</p>
     </header>
@@ -162,53 +171,97 @@
       <p>&copy; Cabinet Kiné</p>
     </footer>
     <script>
+      // --- Gestion du pseudo utilisateur ---
+      const inputUser = document.getElementById("username");
+      const btnSaveUser = document.getElementById("save-user");
+      const btnExport = document.getElementById("export-favs");
+      const btnImport = document.getElementById("import-favs");
+      const importArea = document.getElementById("import-area");
+    
+      // Charge le pseudo en cours (ou vide)
+      let currentUser = localStorage.getItem("currentUser") || "";
+      inputUser.value = currentUser;
+    
+      function saveCurrentUser(name) {
+        currentUser = name.trim();
+        localStorage.setItem("currentUser", currentUser);
+        // recharge la page ou mets à jour l'affichage des favoris
+        location.reload();
+      }
+    
+      btnSaveUser.addEventListener("click", () => {
+        if (inputUser.value) saveCurrentUser(inputUser.value);
+      });
+    
+      // --- Fonctions de favoris par utilisateur ---
       function getFavoris() {
-        return JSON.parse(localStorage.getItem("favoris") || "[]");
+        if (!currentUser) return [];
+        const key = `favoris_${currentUser}`;
+        return JSON.parse(localStorage.getItem(key) || "[]");
       }
     
-      function saveFavoris(favoris) {
-        localStorage.setItem("favoris", JSON.stringify(favoris));
+      function saveFavoris(arr) {
+        if (!currentUser) return;
+        localStorage.setItem(`favoris_${currentUser}`, JSON.stringify(arr));
       }
     
+      // --- Export / Import ---
+      btnExport.addEventListener("click", () => {
+        const data = JSON.stringify(getFavoris());
+        importArea.value = data;
+        alert("Vos favoris ont été copiés dans la zone de texte : copiez-collez-les ailleurs !");
+      });
+    
+      btnImport.addEventListener("click", () => {
+        try {
+          const arr = JSON.parse(importArea.value);
+          if (!Array.isArray(arr)) throw "";
+          saveFavoris(arr);
+          alert("Favoris importés ! Rechargez la page pour voir le contenu.");
+        } catch {
+          alert("Format JSON invalide.");
+        }
+      });
+    
+      // --- Reste du script de favoris (boutons ❤️) ---
       function isInFavoris(id) {
-        const favoris = getFavoris();
-        return favoris.some(item => item.id === id);
+        return getFavoris().some(item => item.id === id);
       }
     
       function toggleFavori(id, label, button) {
-        let favoris = getFavoris();
-        const index = favoris.findIndex(f => f.id === id);
-    
-        if (index !== -1) {
-          favoris.splice(index, 1); // supprimer
-        } else {
-          favoris.push({ id, label }); // ajouter
-        }
-    
-        saveFavoris(favoris);
-        updateButton(button, id); // mettre à jour ce bouton seulement
+        const favs = getFavoris();
+        const idx = favs.findIndex(f => f.id === id);
+        if (idx !== -1) favs.splice(idx, 1);
+        else favs.push({ id, label });
+        saveFavoris(favs);
+        button.textContent = isInFavoris(id) ? "❤️" : "🩶";
       }
     
-      function updateButton(button, id) {
-        if (isInFavoris(id)) {
-          button.textContent = "❤️";
-        } else {
-          button.textContent = "🩶";
-        }
-      }
-    
-      // Initialiser chaque bouton indépendamment
       document.querySelectorAll(".fav-btn").forEach(button => {
         const id = button.dataset.id;
         const label = button.dataset.label;
-    
-        updateButton(button, id); // état initial
-    
-        button.addEventListener("click", () => {
-          toggleFavori(id, label, button);
-        });
+        // état initial
+        button.textContent = isInFavoris(id) ? "❤️" : "🩶";
+        button.addEventListener("click", () => toggleFavori(id, label, button));
       });
+    
+      // --- Pour menu.html uniquement : affichage des favoris ---
+      const favList = document.getElementById("favoris-list");
+      if (favList) {
+        const arr = getFavoris();
+        if (arr.length === 0) {
+          favList.innerHTML = "<p>Aucun favori pour cet utilisateur.</p>";
+        } else {
+          favList.innerHTML = "";
+          arr.forEach(video => {
+            const li = document.createElement("li");
+            li.innerHTML = `<a href="video.html?id=${video.id}&label=${encodeURIComponent(video.label)}">${video.label}</a>`;
+            favList.appendChild(li);
+          });
+        }
+      }
     </script>
+
 
 
   </body>
