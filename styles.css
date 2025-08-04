@@ -1,38 +1,38 @@
-/* styles.css */
+/* === Reset et base mobile-first === */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   max-width: 800px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   font-family: sans-serif;
   color: #333;
+  line-height: 1.5;
 }
 
+/* === Header === */
 .site-header {
   text-align: center;
   margin-bottom: 2rem;
 }
 
 .site-header h1 {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
+  font-size: 2rem;
+  margin-bottom: 0.2rem;
 }
 
 .site-header p {
-  font-size: 1.25rem;
-  margin: 0;
+  font-size: 1.1rem;
+  color: #555;
 }
 
-.site-content section {
-  margin-bottom: 2rem;
-}
-
-.site-content h2 {
-  font-size: 1.75rem;
-  margin-bottom: 1rem;
-}
-
+/* === Navigation “Mes favoris” === */
 .site-nav {
-  margin-top: 1.2rem;
+  margin: 1rem 0 2rem;
   display: flex;
   justify-content: center;
 }
@@ -44,7 +44,7 @@ body {
   padding: 0.4em 1em;
   border-radius: 999px;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.95rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease;
 }
@@ -55,32 +55,89 @@ body {
   transform: scale(1.03);
 }
 
+/* === Sections principales === */
+.site-content section {
+  margin-bottom: 2rem;
+}
 
+.site-content h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #222;
+}
 
+/* === Grille responsive === */
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr;
   gap: 1rem;
+}
+
+@media (min-width: 600px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .grid-item {
   border: 1px solid #ccc;
   padding: 1rem;
-  text-align: center;
   border-radius: 0.5rem;
+  background-color: #fafafa;
 }
 
-.site-footer {
+/* === Liste de vidéos === */
+.video-links {
+  list-style: none;
+  padding-left: 0;
+}
+
+.video-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  font-size: 0.875rem;
-  color: #666;
-  margin-top: 2rem;
+  margin-bottom: 1.5em;
 }
 
+/* Sous-titres internes (optionnel) */
+.video-links p {
+  font-weight: bold;
+  color: #444;
+  margin: 0.5em 0 0.2em;
+}
+
+/* === Boutons Favoris === */
+.fav-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.4rem;
+  margin-top: 0.3em;
+  color: #e63946;
+  padding: 0;
+  transition: opacity 0.2s ease;
+}
+
+.fav-btn:hover {
+  opacity: 0.7;
+}
+
+.fav-btn:focus {
+  outline: none;
+}
+
+/* === Page vidéo intégrée === */
 .video-page {
   max-width: 800px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   text-align: center;
 }
 
@@ -88,17 +145,8 @@ body {
   margin: 2rem 0;
 }
 
-.video-links p {
-  list-style: none;
-  padding-left: 0;
-  margin: 0.5em 0 0.2em;
-  font-weight: bold;
-  color: #444;
-}
-
 iframe {
   width: 100%;
-  max-width: 720px;
   aspect-ratio: 16 / 9;
   border: none;
 }
@@ -110,29 +158,27 @@ iframe {
   color: #0077cc;
 }
 
-.video-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+/* === Footer === */
+.site-footer {
   text-align: center;
-  margin-bottom: 1.5em;
+  font-size: 0.875rem;
+  color: #666;
+  margin-top: 2rem;
 }
 
-
-.fav-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-  margin-left: 0.5em;
-  padding: 0;
-}
-
-.fav-btn:hover {
-  opacity: 0.8;
-}
-
-.fav-btn:focus {
-  outline: none;
+/* === Micro-optimisations très petits écrans === */
+@media (max-width: 350px) {
+  .site-header h1 {
+    font-size: 1.6rem;
+  }
+  .site-content h2 {
+    font-size: 1.2rem;
+  }
+  .site-nav a {
+    font-size: 0.8rem;
+    padding: 0.2em 0.6em;
+  }
+  .fav-btn {
+    font-size: 1.2rem;
+  }
 }
