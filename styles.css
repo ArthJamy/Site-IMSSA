@@ -63,6 +63,29 @@ body {
   transform: scale(1.02);
 }
 
+/* 1. Pas de soulignement par défaut */
+a {
+  text-decoration: none;
+}
+
+/* 2. Même couleur avant et après visite */
+a:link,
+a:visited {
+  color: #3366cc;    /* couleur de base, adapte-la si besoin */
+}
+
+/* 3. Changement de couleur au survol pour indiquer le lien */
+a:hover {
+  color: #5e3b8b;    /* couleur au survol, adapte-la selon ton thème */
+}
+
+/* 4. (Optionnel) Indiquer le focus clavier sans soulignement */
+a:focus {
+  outline: 2px dashed #5e3b8b;
+  outline-offset: 3px;
+}
+
+
 /* === Sections principales === */
 .site-content section {
   margin-bottom: 1.5rem;
