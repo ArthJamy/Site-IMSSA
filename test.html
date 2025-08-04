@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Firebase Auth</title>
+  <!-- 1) SDK compat App + Auth -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script>
+    // 2) Ta config EXACTE issue de la console (onglet CDN → Compat)
+    const firebaseConfig = {
+      apiKey: "AIzaSyA7r18GtsCI1n2AoaBFG-lAYyBPXFIw4Q",
+      authDomain: "imssa-2d3cb.firebaseapp.com",
+      projectId: "imssa-2d3cb",
+      storageBucket: "imssa-2d3cb.appspot.com",
+      messagingSenderId: "976927404721",
+      appId: "1:976927404721:web:3484dd21e9e52a1e692890",
+      measurementId: "G-SKTEPM9LKC"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+  </script>
+</head>
+<body>
+  <h1>Test Google Sign-In</h1>
+  <button id="btn">🔒 Se connecter</button>
+  <pre id="log"></pre>
+
+  <script>
+    const btn = document.getElementById("btn");
+    const log = document.getElementById("log");
+
+    // Écoute des erreurs globales
+    window.addEventListener("error", e => {
+      log.textContent += "\nError: " + e.message;
+    });
+    window.addEventListener("unhandledrejection", e => {
+      log.textContent += "\nRejection: " + (e.reason.message||e.reason);
+    });
+
+    btn.onclick = () => {
+      auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
+        .then(cred => {
+          log.textContent = "Connecté: " + cred.user.displayName;
+        })
+        .catch(err => {
+          log.textContent = "Erreur sign-in: " + err.code + " – " + err.message;
+        });
+    };
+  </script>
+</body>
+</html>
