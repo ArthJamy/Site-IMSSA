@@ -1,268 +1,233 @@
+<!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>IMSSA Mulhouse – Exercices</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <header class="site-header">
-      <div class="user-panel">
-        <label for="username">Utilisateur :</label>
-        <input type="text" id="username" placeholder="Entrez votre nom" />
-        <button id="save-user">✔️</button>
-        <button id="export-favs">Exporter favoris</button>
-        <button id="import-favs">Importer favoris</button>
-        <textarea id="import-area" placeholder="Collez ici vos favoris JSON"></textarea>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IMSSA Mulhouse – Exercices</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    // 1) Ta configuration Firebase (issue de la console)
+    const firebaseConfig = {
+      apiKey: "AIzaSyA7r18GtsCI1n2AoaBFG-lAYyBPXFIw4Q",
+      authDomain: "imssa-2d3cb.firebaseapp.com",
+      projectId: "imssa-2d3cb",
+      storageBucket: "imssa-2d3cb.appspot.com",
+      messagingSenderId: "976927404721",
+      appId: "1:976927404721:web:3484dd21e9e52a1e692890",
+      measurementId: "G-SKTEPM9LKC"
+    };
+    // 2) Initialisation
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db   = firebase.firestore();
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <button id="btn-google" class="google-btn">🔒 Se connecter</button>
+    <h1>Exercices en ligne</h1>
+    <p>Étirements, Renforcement, Réathlétisation</p>
+  </header>
+
+  <main class="site-content">
+    <!-- Section Étirements -->
+    <section class="section-etirements">
+      <h2>Étirements - Mobilité</h2>
+      <div class="grid">
+        <div class="grid-item">
+          <h3>Membre inférieur</h3>
+          <ul class="video-links">
+            <li class="video-item">
+              <a href="video.html?id=ID_INF1&label=Vidéo+1+–+Étirement+MI">Vidéo 1 – Étirement MI</a>
+              <button class="fav-btn" data-id="ID_INF1" data-label="Vidéo 1 – Étirement MI"></button>
+            </li>
+            <li class="video-item">
+              <a href="video.html?id=ID_INF2&label=Vidéo+2+–+Étirement+MI">Vidéo 2 – Étirement MI</a>
+              <button class="fav-btn" data-id="ID_INF2" data-label="Vidéo 2 – Étirement MI"></button>
+            </li>
+          </ul>
+        </div>
+        <div class="grid-item">
+          <h3>Membre supérieur</h3>
+          <ul class="video-links">
+            <li class="video-item">
+              <a href="video.html?id=ID_SUP1&label=Vidéo+1+–+Étirement+MS">Vidéo 1 – Étirement MS</a>
+              <button class="fav-btn" data-id="ID_SUP1" data-label="Vidéo 1 – Étirement MS"></button>
+            </li>
+            <li class="video-item">
+              <a href="video.html?id=ID_SUP2&label=Vidéo+2+–+Étirement+MS">Vidéo 2 – Étirement MS</a>
+              <button class="fav-btn" data-id="ID_SUP2" data-label="Vidéo 2 – Étirement MS"></button>
+            </li>
+          </ul>
+        </div>
+        <div class="grid-item">
+          <h3>Colonne</h3>
+          <ul class="video-links">
+            <li class="video-item">
+              <a href="video.html?id=ID_COL1&label=Vidéo+1+–+Étirement+Colonne">Vidéo 1 – Étirement Colonne</a>
+              <button class="fav-btn" data-id="ID_COL1" data-label="Vidéo 1 – Étirement Colonne"></button>
+            </li>
+            <li class="video-item">
+              <a href="video.html?id=ID_COL2&label=Vidéo+2+–+Étirement+Colonne">Vidéo 2 – Étirement Colonne</a>
+              <button class="fav-btn" data-id="ID_COL2" data-label="Vidéo 2 – Étirement Colonne"></button>
+            </li>
+          </ul>
+        </div>
       </div>
+    </section>
 
-      <h1>Exercices en ligne</h1>
-      <p>Étirements, Renforcement, Réathlétisation</p>
-    </header>
-
-    <main class="site-content">
-      <!-- Section Étirements -->
-      <section class="section-etirements">
-        <h2>Étirements-Mobilité</h2>
-        <div class="grid">
-          <div class="grid-item">
-            <h3>Membre inférieur</h3>
-            <ul class="video-links">
-              <li class="video-item">
-                <a href="video.html?id=ID_INF1">Vidéo 1 – Étirement MI</a>
-                <button class="fav-btn" data-id="ID_EINF1" data-label="Vidéo 1 – Étirement MI"></button>
+    <!-- Section Renforcement -->
+    <section class="section-renforcement">
+      <h2>Renforcement - Proprioception</h2>
+      <div class="grid">
+        <div class="grid-item">
+          <h3>Membre inférieur</h3>
+          <ul class="video-links">
+            <li class="video-item">
+              <a href="video.html?id=ID_RINF1&label=Vidéo+1+–+Renforcement+MI">Vidéo 1 – Renforcement MI</a>
+              <button class="fav-btn" data-id="ID_RINF1" data-label="Vidéo 1 – Renforcement MI"></button>
             </li>
-              <li class="video-item">
-                <a href="video.html?id=ID_INF2">Vidéo 2 – Étirement MI</a>
-                <button class="fav-btn" data-id="ID_EINF2" data-label="Vidéo 2 – Étirement MI"></button>
+            <li class="video-item">
+              <a href="video.html?id=ID_RINF2&label=Vidéo+2+–+Renforcement+MI">Vidéo 2 – Renforcement MI</a>
+              <button class="fav-btn" data-id="ID_RINF2" data-label="Vidéo 2 – Renforcement MI"></button>
             </li>
-            </ul>
-          </div>
-          <div class="grid-item">
-            <h3>Membre supérieur</h3>
-            <ul class="video-links">
-              <li class="video-item">
-                <a href="video.html?id=ID_SUP1">Vidéo 1 – Étirement MS</a>
-                <button class="fav-btn" data-id="ID_ESUP1" data-label="Vidéo 1 – Étirement MS"></button>
-              </li>
-              <li class="video-item">
-                <a href="video.html?id=ID_SUP2">Vidéo 2 – Étirement MS</a>
-                <button class="fav-btn" data-id="ID_ESUP2" data-label="Vidéo 2 – Étirement MS"></button>
-              </li>
-            </ul>
-          </div>
-          <div class="grid-item">
-            <h3>Colonne</h3>
-            <ul class="video-links">
-              <li class="video-item">
-                <a href="video.html?id=ID_COL1">Vidéo 1 – Étirement Colonne</a>
-                <button class="fav-btn" data-id="ID_ECOL1" data-label="Vidéo 1 – Étirement Colonne"></button>
-              </li>
-              <li class="video-item">
-                <a href="video.html?id=ID_COL2">Vidéo 2 – Étirement Colonne</a>
-                <button class="fav-btn" data-id="ID_ECOL2" data-label="Vidéo 2 – Étirement Colonne"></button>
-              </li>
-            </ul>
-          </div>
+          </ul>
         </div>
-      </section>
-
-      <!-- Section Renforcement -->
-      <section class="section-renforcement">
-        <h2>Renforcement-Proprioception</h2>
-        <div class="grid">
-          <div class="grid-item">
-            <h3>Membre inférieur</h3>
-            <ul class="video-links">
-              <li class="video-item">
-                <a href="video.html?id=ID_RINF1">Vidéo 1 – Renforcement MI</a>
-                <button class="fav-btn" data-id="ID_RINF1" data-label="Vidéo 1 – Renforcement MI"></button> 
-              </li>
-              <li class="video-item">
-                <a href="video.html?id=ID_RINF2">Vidéo 2 – Renforcement MI</a>
-                <button class="fav-btn" data-id="ID_RINF2" data-label="Vidéo 2 – Renforcement MI"></button>
-              </li>
-            </ul>
-          </div>
-          <div class="grid-item">
-            <h3>Membre supérieur</h3>
-            <ul class="video-links">
-              <li class="video-item">
-                <a href="video.html?id=ID_RSUP1">Vidéo 1 – Renforcement MS</a>
-                <button class="fav-btn" data-id="ID_RSUP1" data-label="Vidéo 1 – Renforcement MS"></button>
-              </li>
-              <li class="video-item">
-                <a href="video.html?id=ID_RSUP2">Vidéo 2 – Renforcement MS</a>
-                <button class="fav-btn" data-id="ID_RSUP2" data-label="Vidéo 2 – Renforcement MS"></button>
-              </li>
-            </ul>
-          </div>
-          <div class="grid-item">
-            <h3>Colonne</h3>
-            <ul class="video-links">
-              <li class="video-item">
-                <a href="video.html?id=TSBuJYPxQjs&label=Adducteurs+omoplates">Adducteurs omoplates</a>
-                <button class="fav-btn" data-id="TSBuJYPxQjs" data-label="Renforcement adducteurs omoplates"></button>
-              </li>
-              <li class="video-item">
-                <a href="video.html?id=CPVFoSCOdiw&label=Autograndissement">Autograndissement</a>
-                <button class="fav-btn" data-id="CPVFoSCOdiw" data-label="Autograndissement"></button>
-              </li>
-              <li class="video-item">
-                <a href="video.html?id=PLyG9IALZ75hyAAE0ELHSn9h6xq_cH-Z3t">Renforcement Colonne</a>
-                <button class="fav-btn" data-id="ID_RCOL2" data-label="Renforcement Colonne"></button>    
-              </li>
-            </ul>
-          </div>
+        <div class="grid-item">
+          <h3>Membre supérieur</h3>
+          <ul class="video-links">
+            <li class="video-item">
+              <a href="video.html?id=ID_RSUP1&label=Vidéo+1+–+Renforcement+MS">Vidéo 1 – Renforcement MS</a>
+              <button class="fav-btn" data-id="ID_RSUP1" data-label="Vidéo 1 – Renforcement MS"></button>
+            </li>
+            <li class="video-item">
+              <a href="video.html?id=ID_RSUP2&label=Vidéo+2+–+Renforcement+MS">Vidéo 2 – Renforcement MS</a>
+              <button class="fav-btn" data-id="ID_RSUP2" data-label="Vidéo 2 – Renforcement MS"></button>
+            </li>
+          </ul>
         </div>
-      </section>
-
-      <!-- Section Réathlétisation -->
-      <section class="section-reathelitisation">
-        <h2>Réathlétisation</h2>
-        <div class="grid">
-          <div class="grid-item">
-            <h3>Haut du corps</h3>
-            <ul class="video-links">
-              <li class="video-item">
-                <a href="video.html?id=ID_HAUT1">Vidéo 1 – Réathl. Haut</a>
-                <button class="fav-btn" data-id="ID_RHAUT1" data-label="Vidéo 1 – Réathl. Haut"></button>
-              </li>
-              <li class="video-item">
-                <a href="video.html?id=ID_HAUT2">Vidéo 2 – Réathl. Haut</a>
-                <button class="fav-btn" data-id="ID_RHAUT2" data-label="Vidéo 2 – Réathl. Haut"></button>
-              </li>
-            </ul>
-          </div>
-          <div class="grid-item">
-            <h3>Bas du corps</h3>
-            <ul class="video-links">
-              <li class="video-item">
-                <a href="video.html?id=ID_BAS1">Vidéo 1 – Réathl. Bas</a>
-                <button class="fav-btn" data-id="ID_RBAS1" data-label="Vidéo 1 – Réathl. Bas"></button>
-              </li>
-              <li class="video-item">
-                <a href="video.html?id=ID_BAS2">Vidéo 2 – Réathl. Bas</a>
-                <button class="fav-btn" data-id="ID_RBAS2" data-label="Vidéo 2 – Réathl. Bas"></button>
-              </li>
-            </ul>
-          </div>
-          <div class="grid-item">
-            <h3>Cardio</h3>
-            <ul class="video-links">
-              <li class="video-item">
-                <a href="video.html?id=ID_CARD1">Vidéo 1 – Cardio</a>
-                <button class="fav-btn" data-id="ID_CARD1" data-label="Vidéo 1 – Cardio"></button>
-              </li>
-              <li class="video-item">
-                <a href="video.html?id=ID_CARD2">Vidéo 2 – Cardio</a>
-                <button class="fav-btn" data-id="ID_CARD2" data-label="Vidéo 2 – Cardio"></button>
-              </li>
-            </ul>
-          </div>
+        <div class="grid-item">
+          <h3>Colonne</h3>
+          <ul class="video-links">
+            <li class="video-item">
+              <a href="video.html?id=TSBuJYPxQjs&label=Adducteurs+omoplates">Adducteurs omoplates</a>
+              <button class="fav-btn" data-id="TSBuJYPxQjs" data-label="Adducteurs omoplates"></button>
+            </li>
+            <li class="video-item">
+              <a href="video.html?id=CPVFoSCOdiw&label=Autograndissement">Autograndissement</a>
+              <button class="fav-btn" data-id="CPVFoSCOdiw" data-label="Autograndissement"></button>
+            </li>
+            <li class="video-item">
+              <a href="video.html?id=PLyG9IALZ75hyAAE0ELHSn9h6xq_cH-Z3t&label=Renforcement+Colonne">Renforcement Colonne</a>
+              <button class="fav-btn" data-id="PLyG9IALZ75hyAAE0ELHSn9h6xq_cH-Z3t" data-label="Renforcement Colonne"></button>
+            </li>
+          </ul>
         </div>
-      </section>
-    </main>
+      </div>
+    </section>
 
-    <footer class="site-footer">
-      <nav class="site-nav">
-        <a href="menu.html">Mes favoris</a>
-      </nav>
-      <p>&copy; Cabinet Kiné</p>
-    </footer>
-    <script>
-      // --- Gestion du pseudo utilisateur ---
-      const inputUser = document.getElementById("username");
-      const btnSaveUser = document.getElementById("save-user");
-      const btnExport = document.getElementById("export-favs");
-      const btnImport = document.getElementById("import-favs");
-      const importArea = document.getElementById("import-area");
-    
-      // Charge le pseudo en cours (ou vide)
-      let currentUser = localStorage.getItem("currentUser") || "";
-      inputUser.value = currentUser;
-    
-      function saveCurrentUser(name) {
-        currentUser = name.trim();
-        localStorage.setItem("currentUser", currentUser);
-        // recharge la page ou mets à jour l'affichage des favoris
-        location.reload();
-      }
-    
-      btnSaveUser.addEventListener("click", () => {
-        if (inputUser.value) saveCurrentUser(inputUser.value);
-      });
-    
-      // --- Fonctions de favoris par utilisateur ---
-      function getFavoris() {
-        if (!currentUser) return [];
-        const key = `favoris_${currentUser}`;
-        return JSON.parse(localStorage.getItem(key) || "[]");
-      }
-    
-      function saveFavoris(arr) {
-        if (!currentUser) return;
-        localStorage.setItem(`favoris_${currentUser}`, JSON.stringify(arr));
-      }
-    
-      // --- Export / Import ---
-      btnExport.addEventListener("click", () => {
-        const data = JSON.stringify(getFavoris());
-        importArea.value = data;
-        alert("Vos favoris ont été copiés dans la zone de texte : copiez-collez-les ailleurs !");
-      });
-    
-      btnImport.addEventListener("click", () => {
-        try {
-          const arr = JSON.parse(importArea.value);
-          if (!Array.isArray(arr)) throw "";
-          saveFavoris(arr);
-          alert("Favoris importés ! Rechargez la page pour voir le contenu.");
-        } catch {
-          alert("Format JSON invalide.");
-        }
-      });
-    
-      // --- Reste du script de favoris (boutons ❤️) ---
-      function isInFavoris(id) {
-        return getFavoris().some(item => item.id === id);
-      }
-    
-      function toggleFavori(id, label, button) {
-        const favs = getFavoris();
-        const idx = favs.findIndex(f => f.id === id);
-        if (idx !== -1) favs.splice(idx, 1);
-        else favs.push({ id, label });
-        saveFavoris(favs);
-        button.textContent = isInFavoris(id) ? "❤️" : "🩶";
-      }
-    
-      document.querySelectorAll(".fav-btn").forEach(button => {
-        const id = button.dataset.id;
-        const label = button.dataset.label;
-        // état initial
-        button.textContent = isInFavoris(id) ? "❤️" : "🩶";
-        button.addEventListener("click", () => toggleFavori(id, label, button));
-      });
-    
-      // --- Pour menu.html uniquement : affichage des favoris ---
-      const favList = document.getElementById("favoris-list");
-      if (favList) {
-        const arr = getFavoris();
-        if (arr.length === 0) {
-          favList.innerHTML = "<p>Aucun favori pour cet utilisateur.</p>";
-        } else {
-          favList.innerHTML = "";
-          arr.forEach(video => {
-            const li = document.createElement("li");
-            li.innerHTML = `<a href="video.html?id=${video.id}&label=${encodeURIComponent(video.label)}">${video.label}</a>`;
-            favList.appendChild(li);
-          });
-        }
-      }
-    </script>
+    <!-- Section Réathlétisation -->
+    <section class="section-reathelitisation">
+      <h2>Réathlétisation</h2>
+      <div class="grid">
+        <div class="grid-item">
+          <h3>Haut du corps</h3>
+          <ul class="video-links">
+            <li class="video-item">
+              <a href="video.html?id=ID_HAUT1&label=Vidéo+1+–+Réathl.+Haut">Vidéo 1 – Réathl. Haut</a>
+              <button class="fav-btn" data-id="ID_HAUT1" data-label="Vidéo 1 – Réathl. Haut"></button>
+            </li>
+            <li class="video-item">
+              <a href="video.html?id=ID_HAUT2&label=Vidéo+2+–+Réathl.+Haut">Vidéo 2 – Réathl. Haut</a>
+              <button class="fav-btn" data-id="ID_HAUT2" data-label="Vidéo 2 – Réathl. Haut"></button>
+            </li>
+          </ul>
+        </div>
+        <div class="grid-item">
+          <h3>Bas du corps</h3>
+          <ul class="video-links">
+            <li class="video-item">
+              <a href="video.html?id=ID_BAS1&label=Vidéo+1+–+Réathl.+Bas">Vidéo 1 – Réathl. Bas</a>
+              <button class="fav-btn" data-id="ID_BAS1" data-label="Vidéo 1 – Réathl. Bas"></button>
+            </li>
+            <li class="video-item">
+              <a href="video.html?id=ID_BAS2&label=Vidéo+2+–+Réathl.+Bas">Vidéo 2 – Réathl. Bas</a>
+              <button class="fav-btn" data-id="ID_BAS2" data-label="Vidéo 2 – Réathl. Bas"></button>
+            </li>
+          </ul>
+        </div>
+        <div class="grid-item">
+          <h3>Cardio</h3>
+          <ul class="video-links">
+            <li class="video-item">
+              <a href="video.html?id=ID_CARD1&label=Vidéo+1+–+Cardio">Vidéo 1 – Cardio</a>
+              <button class="fav-btn" data-id="ID_CARD1" data-label="Vidéo 1 – Cardio"></button>
+            </li>
+            <li class="video-item">
+              <a href="video.html?id=ID_CARD2&label=Vidéo+2+–+Cardio">Vidéo 2 – Cardio</a>
+              <button class="fav-btn" data-id="ID_CARD2" data-label="Vidéo 2 – Cardio"></button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
 
+  <footer class="site-footer">
+    <nav class="site-nav">
+      <a href="menu.html">Mes favoris</a>
+    </nav>
+    <p>&copy; Cabinet Kiné</p>
+  </footer>
 
+  <script>
+    // Gestion de l'état de connexion Google
+    const btnGoogle = document.getElementById('btn-google');
+    auth.onAuthStateChanged(async user => {
+      if (user) {
+        btnGoogle.textContent = `👤 ${user.displayName}`;
+        const snap = await db.collection('users').doc(user.uid).get();
+        initButtons(snap.exists ? snap.data().favoris : [], user.uid);
+      } else {
+        btnGoogle.textContent = '🔒 Se connecter';
+        initButtons([], null);
+      }
+    });
+    btnGoogle.onclick = () => {
+      if (!auth.currentUser) {
+        auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+      } else {
+        auth.signOut();
+      }
+    };
 
-  </body>
+    // Initialisation des boutons favoris
+    async function initButtons(favs, uid) {
+      document.querySelectorAll('.fav-btn').forEach(btn => {
+        const { id, label } = btn.dataset;
+        btn.textContent = favs.some(f => f.id === id) ? '❤️' : '🩶';
+        btn.onclick = () => toggleFavori(id, label, btn, uid);
+      });
+    }
+
+    // Toggle et sauvegarde en Firestore
+    async function toggleFavori(id, label, btn, uid) {
+      if (!uid) return alert('Connectez-vous pour gérer vos favoris.');
+      const ref = db.collection('users').doc(uid);
+      const snap = await ref.get();
+      let favs = snap.exists ? snap.data().favoris : [];
+      const idx = favs.findIndex(f => f.id === id);
+      if (idx !== -1) favs.splice(idx, 1);
+      else favs.push({ id, label });
+      await ref.set({ favoris: favs }, { merge: true });
+      btn.textContent = idx !== -1 ? '🩶' : '❤️';
+    }
+  </script>
+</body>
 </html>
