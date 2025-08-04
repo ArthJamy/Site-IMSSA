@@ -7,29 +7,6 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyA7r18GtsCIi1n2AoaBFG-lAYyBPXFIw4Q",
-    authDomain: "imssa-2d3cb.firebaseapp.com",
-    projectId: "imssa-2d3cb",
-    storageBucket: "imssa-2d3cb.firebasestorage.app",
-    messagingSenderId: "976927404721",
-    appId: "1:976927404721:web:3484dd21e9e52a1e692890",
-    measurementId: "G-SKTEPM9LKC"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
   <header class="site-header">
     <button id="btn-google" class="google-btn">🔒 Se connecter</button>
     <h1>Exercices en ligne</h1>
@@ -187,11 +164,42 @@
     <p>&copy; Cabinet Kiné</p>
   </footer>
 
-  <script>
-    
-    // Bouton Google
-    const btnGoogle = document.getElementById('btn-google');
-    btnGoogle.addEventListener('click', () => {
+    <script type="module">
+    // 1) Imports Firebase (v12 modules)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signInWithPopup,
+      GoogleAuthProvider,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+    // 2) Ta config Firebase (copiée depuis la console > CDN > Compat ou Modules)
+    const firebaseConfig = {
+      apiKey: "AIzaSyA7r18GtsCIi1n2AoaBFG-lAYyBPXFIw4Q",
+      authDomain: "imssa-2d3cb.firebaseapp.com",
+      projectId: "imssa-2d3cb",
+      storageBucket: "imssa-2d3cb.appspot.com",
+      messagingSenderId: "976927404721",
+      appId: "1:976927404721:web:3484dd21e9e52a1e692890",
+      measurementId: "G-SKTEPM9LKC"
+    };
+
+    // 3) Initialisation Firebase
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    // 4) Gestion du bouton Google Sign-In / Sign-Out
+    const btnGoogle = document.getElementById("btn-google");
+    btnGoogle.addEventListener("click", () => {
       if (!auth.currentUser) {
         signInWithPopup(auth, new GoogleAuthProvider()).catch(console.error);
       } else {
@@ -199,37 +207,43 @@
       }
     });
 
-    // État de connexion & init des favoris
+    // 5) Écoute de l’état de connexion et initialisation des boutons ❤️/🩶
     onAuthStateChanged(auth, async user => {
       if (user) {
         btnGoogle.textContent = `👤 ${user.displayName}`;
-        const ref  = doc(db, 'users', user.uid);
+        // Récupère les favoris dans Firestore
+        const ref  = doc(db, "users", user.uid);
         const snap = await getDoc(ref);
         const favs = snap.exists() ? snap.data().favoris : [];
         initButtons(favs, user.uid);
       } else {
-        btnGoogle.textContent = '🔒 Se connecter';
+        btnGoogle.textContent = "🔒 Se connecter";
         initButtons([], null);
       }
     });
 
-    // Gestion des favoris
+    // 6) Fonctions de gestion des favoris
     async function toggleFavori(id, label, btn, uid) {
-      if (!uid) return alert('Connectez-vous d’abord.');
-      const ref  = doc(db, 'users', uid);
+      if (!uid) {
+        alert("Connectez-vous d’abord pour gérer vos favoris.");
+        return;
+      }
+      const ref  = doc(db, "users", uid);
       const snap = await getDoc(ref);
       let favs    = snap.exists() ? snap.data().favoris : [];
       const idx   = favs.findIndex(f => f.id === id);
       if (idx !== -1) favs.splice(idx, 1);
-      else favs.push({ id, label });
+      else            favs.push({ id, label });
+      // Sauvegarde en base
       await setDoc(ref, { favoris: favs }, { merge: true });
-      btn.textContent = idx !== -1 ? '🩶' : '❤️';
+      // Mise à jour du bouton
+      btn.textContent = idx !== -1 ? "🩶" : "❤️";
     }
 
     function initButtons(favs, uid) {
-      document.querySelectorAll('.fav-btn').forEach(btn => {
+      document.querySelectorAll(".fav-btn").forEach(btn => {
         const { id, label } = btn.dataset;
-        btn.textContent = favs.some(f => f.id === id) ? '❤️' : '🩶';
+        btn.textContent = favs.some(f => f.id === id) ? "❤️" : "🩶";
         btn.onclick = () => toggleFavori(id, label, btn, uid);
       });
     }
