@@ -5,26 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>IMSSA Mulhouse – Exercices</title>
   <link rel="stylesheet" href="styles.css" />
-
-  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
-<script src="https://www.gstatic.com/firebasejs/12.0.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore-compat.js"></script>
-
-<script>
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyA7r18GtsCIi1n2AoaBFG-lAYyBPXFIw4Q",
-    authDomain: "imssa-2d3cb.firebaseapp.com",
-    projectId: "imssa-2d3cb",
-    storageBucket: "imssa-2d3cb.firebasestorage.app",
-    messagingSenderId: "976927404721",
-    appId: "1:976927404721:web:3484dd21e9e52a1e692890",
-    measurementId: "G-SKTEPM9LKC"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-</script>
-
 </head>
 <body>
   <header class="site-header">
@@ -184,47 +164,81 @@
     <p>&copy; Cabinet Kiné</p>
   </footer>
 
-  <script>
-    // Gestion de l'état de connexion Google
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js';
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signInWithPopup,
+      GoogleAuthProvider,
+      signOut
+    } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js';
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc
+    } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js';
+
+    // Ta configuration Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyA7r18GtsCI1n2AoaBFG-lAYyBPXFIw4Q",
+      authDomain: "imssa-2d3cb.firebaseapp.com",
+      projectId: "imssa-2d3cb",
+      storageBucket: "imssa-2d3cb.appspot.com",
+      messagingSenderId: "976927404721",
+      appId: "1:976927404721:web:3484dd21e9e52a1e692890",
+      measurementId: "G-SKTEPM9LKC"
+    };
+
+    // Initialise Firebase
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    // Bouton Google
     const btnGoogle = document.getElementById('btn-google');
-    auth.onAuthStateChanged(async user => {
+    btnGoogle.addEventListener('click', () => {
+      if (!auth.currentUser) {
+        signInWithPopup(auth, new GoogleAuthProvider()).catch(console.error);
+      } else {
+        signOut(auth).catch(console.error);
+      }
+    });
+
+    // État de connexion & init des favoris
+    onAuthStateChanged(auth, async user => {
       if (user) {
         btnGoogle.textContent = `👤 ${user.displayName}`;
-        const snap = await db.collection('users').doc(user.uid).get();
-        initButtons(snap.exists ? snap.data().favoris : [], user.uid);
+        const ref  = doc(db, 'users', user.uid);
+        const snap = await getDoc(ref);
+        const favs = snap.exists() ? snap.data().favoris : [];
+        initButtons(favs, user.uid);
       } else {
         btnGoogle.textContent = '🔒 Se connecter';
         initButtons([], null);
       }
     });
-    btnGoogle.onclick = () => {
-      if (!auth.currentUser) {
-        auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-      } else {
-        auth.signOut();
-      }
-    };
 
-    // Initialisation des boutons favoris
-    async function initButtons(favs, uid) {
+    // Gestion des favoris
+    async function toggleFavori(id, label, btn, uid) {
+      if (!uid) return alert('Connectez-vous d’abord.');
+      const ref  = doc(db, 'users', uid);
+      const snap = await getDoc(ref);
+      let favs    = snap.exists() ? snap.data().favoris : [];
+      const idx   = favs.findIndex(f => f.id === id);
+      if (idx !== -1) favs.splice(idx, 1);
+      else favs.push({ id, label });
+      await setDoc(ref, { favoris: favs }, { merge: true });
+      btn.textContent = idx !== -1 ? '🩶' : '❤️';
+    }
+
+    function initButtons(favs, uid) {
       document.querySelectorAll('.fav-btn').forEach(btn => {
         const { id, label } = btn.dataset;
         btn.textContent = favs.some(f => f.id === id) ? '❤️' : '🩶';
         btn.onclick = () => toggleFavori(id, label, btn, uid);
       });
-    }
-
-    // Toggle et sauvegarde en Firestore
-    async function toggleFavori(id, label, btn, uid) {
-      if (!uid) return alert('Connectez-vous pour gérer vos favoris.');
-      const ref = db.collection('users').doc(uid);
-      const snap = await ref.get();
-      let favs = snap.exists ? snap.data().favoris : [];
-      const idx = favs.findIndex(f => f.id === id);
-      if (idx !== -1) favs.splice(idx, 1);
-      else favs.push({ id, label });
-      await ref.set({ favoris: favs }, { merge: true });
-      btn.textContent = idx !== -1 ? '🩶' : '❤️';
     }
   </script>
 </body>
