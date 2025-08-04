@@ -75,10 +75,12 @@ body {
 }
 
 /* === Grille responsive === */
+/* === Grille responsive avec cartes égales === */
 .grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.75rem;
+  grid-template-columns: 1fr;       /* mobile : 1 colonne */
+  grid-auto-rows: 1fr;             /* chaque ligne prend la même hauteur */
+  gap: 1rem;
 }
 
 @media (min-width: 600px) {
@@ -93,12 +95,19 @@ body {
   }
 }
 
+/* === Cartes flexibles pour répartir verticalement === */
 .grid-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;  /* pousse le contenu haut et bas */
   border: 1px solid #ccc;
-  padding: 0.75rem;
+  padding: 1rem;
   border-radius: 0.5rem;
   background-color: #fafafa;
   text-align: center;
+
+  /* facultatif : hauteur minimum pour lisibilité */
+  min-height: 200px;
 }
 
 /* === Liste de vidéos === */
