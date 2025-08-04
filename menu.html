@@ -5,18 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mes favoris</title>
   <link rel="stylesheet" href="styles.css" />
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script>
+    // Config Firebase (depuis la console)
+    const firebaseConfig = {
+      apiKey: "AIzaSyA7r18GtsCI1n2AoaBFG-lAYyBPXFIw4Q",
+      authDomain: "imssa-2d3cb.firebaseapp.com",
+      projectId: "imssa-2d3cb",
+      storageBucket: "imssa-2d3cb.appspot.com",
+      messagingSenderId: "976927404721",
+      appId: "1:976927404721:web:3484dd21e9e52a1e692890",
+      measurementId: "G-SKTEPM9LKC"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db   = firebase.firestore();
+  </script>
 </head>
 <body>
   <header class="site-header">
-    <div class="user-panel">
-      <label for="username">Utilisateur :</label>
-      <input type="text" id="username" placeholder="Entrez votre nom" />
-      <button id="save-user">✔️</button>
-      <button id="export-favs">Exporter favoris</button>
-      <button id="import-favs">Importer favoris</button>
-      <textarea id="import-area" placeholder="Collez ici vos favoris JSON"></textarea>
-    </div>
-
+    <button id="btn-google" class="google-btn">🔒 Se connecter</button>
     <h1>Mon menu d’exercices</h1>
     <nav class="site-nav">
       <a href="index.html">Accueil</a>
@@ -25,7 +37,7 @@
 
   <main class="site-content">
     <ul class="video-links" id="favoris-list">
-      <!-- Rempli dynamiquement -->
+      <!-- Chargé dynamiquement -->
     </ul>
   </main>
 
@@ -34,96 +46,42 @@
   </footer>
 
   <script>
-  // --- Gestion du pseudo utilisateur ---
-  const inputUser = document.getElementById("username");
-  const btnSaveUser = document.getElementById("save-user");
-  const btnExport = document.getElementById("export-favs");
-  const btnImport = document.getElementById("import-favs");
-  const importArea = document.getElementById("import-area");
+    const btnGoogle = document.getElementById('btn-google');
+    const favList   = document.getElementById('favoris-list');
 
-  // Charge le pseudo en cours (ou vide)
-  let currentUser = localStorage.getItem("currentUser") || "";
-  inputUser.value = currentUser;
+    auth.onAuthStateChanged(async user => {
+      if (user) {
+        btnGoogle.textContent = `👤 ${user.displayName}`;
+        const snap = await db.collection('users').doc(user.uid).get();
+        const favs = snap.exists ? snap.data().favoris : [];
+        renderFavoris(favs);
+      } else {
+        btnGoogle.textContent = '🔒 Se connecter';
+        favList.innerHTML = '<p>Connectez-vous pour voir vos favoris.</p>';
+      }
+    });
 
-  function saveCurrentUser(name) {
-    currentUser = name.trim();
-    localStorage.setItem("currentUser", currentUser);
-    // recharge la page ou mets à jour l'affichage des favoris
-    location.reload();
-  }
+    btnGoogle.onclick = () => {
+      if (!auth.currentUser) {
+        auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+      } else {
+        auth.signOut();
+      }
+    };
 
-  btnSaveUser.addEventListener("click", () => {
-    if (inputUser.value) saveCurrentUser(inputUser.value);
-  });
-
-  // --- Fonctions de favoris par utilisateur ---
-  function getFavoris() {
-    if (!currentUser) return [];
-    const key = `favoris_${currentUser}`;
-    return JSON.parse(localStorage.getItem(key) || "[]");
-  }
-
-  function saveFavoris(arr) {
-    if (!currentUser) return;
-    localStorage.setItem(`favoris_${currentUser}`, JSON.stringify(arr));
-  }
-
-  // --- Export / Import ---
-  btnExport.addEventListener("click", () => {
-    const data = JSON.stringify(getFavoris());
-    importArea.value = data;
-    alert("Vos favoris ont été copiés dans la zone de texte : copiez-collez-les ailleurs !");
-  });
-
-  btnImport.addEventListener("click", () => {
-    try {
-      const arr = JSON.parse(importArea.value);
-      if (!Array.isArray(arr)) throw "";
-      saveFavoris(arr);
-      alert("Favoris importés ! Rechargez la page pour voir le contenu.");
-    } catch {
-      alert("Format JSON invalide.");
-    }
-  });
-
-  // --- Reste du script de favoris (boutons ❤️) ---
-  function isInFavoris(id) {
-    return getFavoris().some(item => item.id === id);
-  }
-
-  function toggleFavori(id, label, button) {
-    const favs = getFavoris();
-    const idx = favs.findIndex(f => f.id === id);
-    if (idx !== -1) favs.splice(idx, 1);
-    else favs.push({ id, label });
-    saveFavoris(favs);
-    button.textContent = isInFavoris(id) ? "❤️" : "🩶";
-  }
-
-  document.querySelectorAll(".fav-btn").forEach(button => {
-    const id = button.dataset.id;
-    const label = button.dataset.label;
-    // état initial
-    button.textContent = isInFavoris(id) ? "❤️" : "🩶";
-    button.addEventListener("click", () => toggleFavori(id, label, button));
-  });
-
-  // --- Pour menu.html uniquement : affichage des favoris ---
-  const favList = document.getElementById("favoris-list");
-  if (favList) {
-    const arr = getFavoris();
-    if (arr.length === 0) {
-      favList.innerHTML = "<p>Aucun favori pour cet utilisateur.</p>";
-    } else {
-      favList.innerHTML = "";
-      arr.forEach(video => {
-        const li = document.createElement("li");
+    function renderFavoris(favs) {
+      if (favs.length === 0) {
+        favList.innerHTML = '<p>Aucun favori pour cet utilisateur.</p>';
+        return;
+      }
+      favList.innerHTML = '';
+      favs.forEach(video => {
+        const li = document.createElement('li');
+        li.className = 'video-item';
         li.innerHTML = `<a href="video.html?id=${video.id}&label=${encodeURIComponent(video.label)}">${video.label}</a>`;
         favList.appendChild(li);
       });
     }
-  }
-</script>
-
+  </script>
 </body>
 </html>
