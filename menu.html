@@ -5,27 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mes favoris</title>
   <link rel="stylesheet" href="styles.css" />
-
-  <!-- Firebase SDKs -->
-  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
-<script src="https://www.gstatic.com/firebasejs/12.0.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs12.0.0/firebase-firestore-compat.js"></script>
-
-<script>
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyA7r18GtsCIi1n2AoaBFG-lAYyBPXFIw4Q",
-    authDomain: "imssa-2d3cb.firebaseapp.com",
-    projectId: "imssa-2d3cb",
-    storageBucket: "imssa-2d3cb.firebasestorage.app",
-    messagingSenderId: "976927404721",
-    appId: "1:976927404721:web:3484dd21e9e52a1e692890",
-    measurementId: "G-SKTEPM9LKC"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-</script>
-
 </head>
 <body>
   <header class="site-header">
@@ -46,15 +25,57 @@
     <p>&copy; Cabinet Kiné</p>
   </footer>
 
-  <script>
-    const btnGoogle = document.getElementById('btn-google');
-    const favList   = document.getElementById('favoris-list');
+  <script type="module">
+    // 1) Imports Firebase modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signInWithPopup,
+      GoogleAuthProvider,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-    auth.onAuthStateChanged(async user => {
+    // 2) Configuration Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyA7r18GtsCIi1n2AoaBFG-lAYyBPXFIw4Q",
+      authDomain: "imssa-2d3cb.firebaseapp.com",
+      projectId: "imssa-2d3cb",
+      storageBucket: "imssa-2d3cb.appspot.com",
+      messagingSenderId: "976927404721",
+      appId: "1:976927404721:web:3484dd21e9e52a1e692890",
+      measurementId: "G-SKTEPM9LKC"
+    };
+
+    // 3) Initialise Firebase
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    // 4) Bouton Google Sign-In/Out
+    const btnGoogle = document.getElementById('btn-google');
+    btnGoogle.addEventListener('click', () => {
+      if (!auth.currentUser) {
+        signInWithPopup(auth, new GoogleAuthProvider()).catch(console.error);
+      } else {
+        signOut(auth).catch(console.error);
+      }
+    });
+
+    // 5) État de connexion et affichage des favoris
+    const favList = document.getElementById('favoris-list');
+    onAuthStateChanged(auth, async user => {
       if (user) {
         btnGoogle.textContent = `👤 ${user.displayName}`;
-        const snap = await db.collection('users').doc(user.uid).get();
-        const favs = snap.exists ? snap.data().favoris : [];
+        const ref  = doc(db, 'users', user.uid);
+        const snap = await getDoc(ref);
+        const favs = snap.exists() ? snap.data().favoris : [];
         renderFavoris(favs);
       } else {
         btnGoogle.textContent = '🔒 Se connecter';
@@ -62,14 +83,7 @@
       }
     });
 
-    btnGoogle.onclick = () => {
-      if (!auth.currentUser) {
-        auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-      } else {
-        auth.signOut();
-      }
-    };
-
+    // 6) Fonction de rendu des favoris
     function renderFavoris(favs) {
       if (favs.length === 0) {
         favList.innerHTML = '<p>Aucun favori pour cet utilisateur.</p>';
@@ -79,7 +93,11 @@
       favs.forEach(video => {
         const li = document.createElement('li');
         li.className = 'video-item';
-        li.innerHTML = `<a href="video.html?id=${video.id}&label=${encodeURIComponent(video.label)}">${video.label}</a>`;
+        li.innerHTML = `
+          <a href="video.html?id=${video.id}&label=${encodeURIComponent(video.label)}">
+            ${video.label}
+          </a>
+        `;
         favList.appendChild(li);
       });
     }
