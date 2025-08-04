@@ -101,7 +101,7 @@ a:focus {
 /* === Grille responsive avec cartes égales === */
 .grid {
   display: grid;
-   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));      /* mobile : 1 colonne */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));      /* mobile : 1 colonne */
   grid-auto-rows: 1fr;             /* chaque ligne prend la même hauteur */
   gap: 1rem;
 }
@@ -122,7 +122,6 @@ a:focus {
 .grid-item {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: center;
   text-align: center;
   border: 1px solid #ccc;
@@ -143,8 +142,20 @@ a:focus {
 /* === Liste de vidéos === */
 .video-links {
   list-style: none;
-  padding-left: 0;
-  margin-top: 0.5rem;
+  padding: 0;
+  margin: auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.video-links li {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.video-links a {
+  display: inline-block;
 }
 
 .video-item {
