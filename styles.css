@@ -57,19 +57,7 @@ body {
   box-shadow: 0 1px 3px rgba(0,0,0,0.2);
   transition: background 0.2s ease;
 }
-.google-btn:hover { background: #357ae8; }
 
-.favorites-link {
-  text-decoration: none;
-  color: #5e3b8b;
-  background-color: #f3eaff;
-  padding: 0.3em 0.8em;
-  border-radius: 999px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  transition: all 0.2s ease;
-}
 .favorites-link:hover {
   background-color: #e0d1fa;
   color: #3c2371;
