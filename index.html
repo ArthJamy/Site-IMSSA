@@ -8,7 +8,15 @@
 </head>
 <body>
   <header class="site-header">
-    <button id="btn-google" class="google-btn">🔒 Se connecter</button>
+    <div class="auth-container">
+      <button id="btn-google" class="google-btn">🔒 Se connecter avec Google</button>
+      <form id="email-form">
+        <input type="email" id="email" placeholder="Email" required />
+        <input type="password" id="password" placeholder="Mot de passe" required />
+        <button type="button" id="btn-signup">S'inscrire</button>
+        <button type="button" id="btn-login">Se connecter</button>
+      </form>
+    </div>
     <h1>Exercices en ligne</h1>
     <p>Étirements, Renforcement, Réathlétisation</p>
   </header>
