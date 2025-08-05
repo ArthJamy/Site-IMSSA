@@ -24,6 +24,31 @@ body {
   gap: 1rem;
 }
 
+/* === Liens dans le bandeau supérieur === */
+.top-bar a,
+.top-bar .favorites-link,
+.top-bar button.google-btn + a {
+  text-decoration: none;
+  color: #5e3b8b;
+  background-color: #f3eaff;
+  padding: 0.3em 0.8em;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: all 0.2s ease;
+}
+
+/* Survol identique au favoris */
+.top-bar a:hover,
+.top-bar .favorites-link:hover,
+.top-bar button.google-btn + a:hover {
+  background-color: #e0d1fa;
+  color: #3c2371;
+  transform: scale(1.02);
+}
+
+
 .google-btn {
   background: #4285f4; color: #fff;
   border: none; border-radius: 4px;
