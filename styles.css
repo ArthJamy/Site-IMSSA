@@ -27,6 +27,19 @@ body {
   margin-bottom: 1.5rem;
 }
 
+.top-bar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  background-color: #fff;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 100;
+  gap: 1rem;
+}
+
 .google-btn {
   background: #4285f4;
   color: #fff;
