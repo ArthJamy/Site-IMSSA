@@ -8,15 +8,7 @@
 </head>
 <body>
   <header class="site-header">
-    <div class="auth-container">
-      <button id="btn-google" class="google-btn">🔒 Se connecter avec Google</button>
-      <form id="email-form">
-        <input type="email" id="email" placeholder="Email" required />
-        <input type="password" id="password" placeholder="Mot de passe" required />
-        <button type="button" id="btn-signup">S'inscrire</button>
-        <button type="button" id="btn-login">Se connecter</button>
-      </form>
-    </div>
+    <button id="btn-google" class="google-btn">🔒 Se connecter</button>
     <h1>Exercices en ligne</h1>
     <p>Étirements, Renforcement, Réathlétisation</p>
   </header>
@@ -173,16 +165,14 @@
   </footer>
 
     <script type="module">
-    // Import Firebase modules
+    // 1) Imports Firebase (v12 modules)
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import {
       getAuth,
       onAuthStateChanged,
       signInWithPopup,
       GoogleAuthProvider,
-      signOut,
-      createUserWithEmailAndPassword,
-      signInWithEmailAndPassword
+      signOut
     } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
     import {
       getFirestore,
@@ -191,7 +181,7 @@
       setDoc
     } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-    // Firebase config
+    // 2) Ta config Firebase (copiée depuis la console > CDN > Compat ou Modules)
     const firebaseConfig = {
       apiKey: "AIzaSyA7r18GtsCIi1n2AoaBFG-lAYyBPXFIw4Q",
       authDomain: "imssa-2d3cb.firebaseapp.com",
@@ -202,20 +192,13 @@
       measurementId: "G-SKTEPM9LKC"
     };
 
-    // Initialize Firebase
+    // 3) Initialisation Firebase
     const app  = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db   = getFirestore(app);
 
-    // Elements
+    // 4) Gestion du bouton Google Sign-In / Sign-Out
     const btnGoogle = document.getElementById("btn-google");
-    const emailForm = document.getElementById("email-form");
-    const emailInput = document.getElementById("email");
-    const passInput  = document.getElementById("password");
-    const btnSignup  = document.getElementById("btn-signup");
-    const btnLogin   = document.getElementById("btn-login");
-
-    // Google Sign-In/Out
     btnGoogle.addEventListener("click", () => {
       if (!auth.currentUser) {
         signInWithPopup(auth, new GoogleAuthProvider()).catch(console.error);
@@ -224,66 +207,46 @@
       }
     });
 
-    // Email/Password Sign-Up
-    btnSignup.addEventListener("click", () => {
-      const email = emailInput.value.trim();
-      const pass  = passInput.value;
-      if (!email || !pass) return alert("Email et mot de passe requis.");
-      createUserWithEmailAndPassword(auth, email, pass)
-        .then(userCred => console.log("Inscrit", userCred.user.email))
-        .catch(err => alert(err.message));
-    });
-
-    // Email/Password Sign-In
-    btnLogin.addEventListener("click", () => {
-      const email = emailInput.value.trim();
-      const pass  = passInput.value;
-      if (!email || !pass) return alert("Email et mot de passe requis.");
-      signInWithEmailAndPassword(auth, email, pass)
-        .then(userCred => console.log("Connecté", userCred.user.email))
-        .catch(err => alert(err.message));
-    });
-
-    // Auth state listener & init favoris
+    // 5) Écoute de l’état de connexion et initialisation des boutons ❤️/🩶
     onAuthStateChanged(auth, async user => {
       if (user) {
-        btnGoogle.textContent = `👤 ${user.displayName||user.email}`;
-        initButtons(await loadFavoris(user.uid), user.uid);
+        btnGoogle.textContent = 👤 ${user.displayName};
+        // Récupère les favoris dans Firestore
+        const ref  = doc(db, "users", user.uid);
+        const snap = await getDoc(ref);
+        const favs = snap.exists() ? snap.data().favoris : [];
+        initButtons(favs, user.uid);
       } else {
-        btnGoogle.textContent = '🔒 Se connecter avec Google';
+        btnGoogle.textContent = "🔒 Se connecter";
         initButtons([], null);
       }
     });
 
-    // Load favoris from Firestore
-    async function loadFavoris(uid) {
-      const ref  = doc(db, "users", uid);
-      const snap = await getDoc(ref);
-      return snap.exists() ? snap.data().favoris : [];
-    }
-
-    // Toggle favoris
+    // 6) Fonctions de gestion des favoris
     async function toggleFavori(id, label, btn, uid) {
-      if (!uid) return alert("Connectez-vous pour gérer vos favoris.");
+      if (!uid) {
+        alert("Connectez-vous d’abord pour gérer vos favoris.");
+        return;
+      }
       const ref  = doc(db, "users", uid);
       const snap = await getDoc(ref);
       let favs    = snap.exists() ? snap.data().favoris : [];
-      const idx   = favs.findIndex(f => f.id===id);
-      if (idx!==-1) favs.splice(idx,1);
-      else favs.push({id,label});
-      await setDoc(ref,{favoris:favs},{merge:true});
-      btn.textContent = idx!==-1?"🩶":"❤️";
+      const idx   = favs.findIndex(f => f.id === id);
+      if (idx !== -1) favs.splice(idx, 1);
+      else            favs.push({ id, label });
+      // Sauvegarde en base
+      await setDoc(ref, { favoris: favs }, { merge: true });
+      // Mise à jour du bouton
+      btn.textContent = idx !== -1 ? "🩶" : "❤️";
     }
 
-    // Init buttons
     function initButtons(favs, uid) {
-      document.querySelectorAll('.fav-btn').forEach(btn=>{
-        const {id,label} = btn.dataset;
-        btn.textContent = favs.some(f=>f.id===id)?"❤️":"🩶";
-        btn.onclick = ()=>toggleFavori(id,label,btn,uid);
+      document.querySelectorAll(".fav-btn").forEach(btn => {
+        const { id, label } = btn.dataset;
+        btn.textContent = favs.some(f => f.id === id) ? "❤️" : "🩶";
+        btn.onclick = () => toggleFavori(id, label, btn, uid);
       });
     }
-
   </script>
 </body>
 </html>
