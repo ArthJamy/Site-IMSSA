@@ -143,7 +143,17 @@ a:focus { outline: 2px dashed #5e3b8b; outline-offset: 3px; }
   align-items: center;
 }
 .video-links li { margin-bottom: 1rem; }
-.video-links a { display: inline-block; text-align: center; }
+
+.video-item a {
+  display: block;      /* le lien occupe toute la largeur de son conteneur */
+  text-align: center;  /* on centre le texte (et le cœur plus bas) */
+}
+
+.video-item .fav-btn {
+  display: block;      /* pour qu’il passe à la ligne */
+  margin: 0.5em auto;  /* espace au-dessus et centré horizontalement */
+}
+
 
 .fav-btn {
   background: none;
