@@ -2,51 +2,69 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Test Firebase Auth</title>
-  <!-- 1) SDK compat App + Auth -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script>
-    // 2) Ta config EXACTE issue de la console (onglet CDN → Compat)
-    const firebaseConfig = {
-      apiKey: "AIzaSyA7r18GtsCI1n2AoaBFG-lAYyBPXFIw4Q",
-      authDomain: "imssa-2d3cb.firebaseapp.com",
-      projectId: "imssa-2d3cb",
-      storageBucket: "imssa-2d3cb.appspot.com",
-      messagingSenderId: "976927404721",
-      appId: "1:976927404721:web:3484dd21e9e52a1e692890",
-      measurementId: "G-SKTEPM9LKC"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-  </script>
+  <title>Vidéos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f9f9f9;
+    }
+    h1 {
+      text-align: center;
+    }
+    h2 {
+      margin-top: 30px;
+      color: #333;
+    }
+    .video {
+      margin: 15px 0;
+    }
+    iframe {
+      display: block;
+      margin-top: 5px;
+      border-radius: 8px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Test Google Sign-In</h1>
-  <button id="btn">🔒 Se connecter</button>
-  <pre id="log"></pre>
+  <h1>Catalogue de vidéos</h1>
+  <div id="videos"></div>
 
   <script>
-    const btn = document.getElementById("btn");
-    const log = document.getElementById("log");
+    // Charger le fichier JSON
+    fetch("videos.json")
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById("videos");
 
-    // Écoute des erreurs globales
-    window.addEventListener("error", e => {
-      log.textContent += "\nError: " + e.message;
-    });
-    window.addEventListener("unhandledrejection", e => {
-      log.textContent += "\nRejection: " + (e.reason.message||e.reason);
-    });
+        // Parcours des catégories
+        for (const categorie in data) {
+          // Ajouter un titre de catégorie
+          const h2 = document.createElement("h2");
+          h2.textContent = categorie;
+          container.appendChild(h2);
 
-    btn.onclick = () => {
-      auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
-        .then(cred => {
-          log.textContent = "Connecté: " + cred.user.displayName;
-        })
-        .catch(err => {
-          log.textContent = "Erreur sign-in: " + err.code + " – " + err.message;
-        });
-    };
+          // Ajouter les vidéos de la catégorie
+          data[categorie].forEach(video => {
+            const div = document.createElement("div");
+            div.className = "video";
+            div.innerHTML = `
+              <h3>${video.titre}</h3>
+              <iframe width="400" height="225"
+                src="${video.url}"
+                frameborder="0"
+                allowfullscreen>
+              </iframe>
+            `;
+            container.appendChild(div);
+          });
+        }
+      })
+      .catch(error => {
+        document.getElementById("videos").innerHTML =
+          "<p style='color:red;'>Erreur de chargement du fichier JSON</p>";
+        console.error(error);
+      });
   </script>
 </body>
 </html>
