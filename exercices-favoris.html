@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Parcourez toutes les vidéos d'exercices d'une sous-catégorie spécifique sur IMSSA 68 Mulhouse. Suivez les mouvements à votre rythme et améliorez votre pratique.">
-    <meta name="robots" content="noindex">
+    <meta name="description" content="Consultez vos vidéos d'exercices favorites sur IMSSA 68 Mulhouse et retrouvez rapidement tous vos contenus préférés pour un entraînement simple et efficace.">
 
     <link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
     <link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
@@ -14,71 +13,90 @@
     <!-- FAVICON -->
     <link rel="icon" href="img/logoIMSSA.ico" type="image/x-icon">
 
-    <title>IMSSA 68 Mulhouse - Voir Tous les Exercices de Rééducation</title>
+    <title>IMSSA 68 Mulhouse - Vos Vidéos Favoris de Rééducation et Sport</title>
     <style>
-        /* Style pour les titres avec boutons favoris */
+        /* Style pour le titre principal */
         #titre {
             margin-top: 50px;
             text-align: center;
             font-size: 2em;
         }
 
-        .video-header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            text-align: center;
-            margin-bottom: 20px;
+        /* Style pour la liste des favoris */
+        .favoris-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
-        .video-header h3 {
-            font-size: 1.5em;
+        .video-links {
+            list-style: none;
+            padding: 0;
             margin: 0;
         }
 
-        /* Style bouton favoris */
-        .fav-btn {
+        .video-item {
+            background: #f8f9fa;
+            border: 1px solid #111433;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .video-item:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(17, 20, 51, 0.1);
+        }
+
+        .video-item a {
+            text-decoration: none;
+            color: #111433;
+            font-size: 1.2em;
+            font-weight: 500;
+            display: block;
+        }
+
+        .video-item a:hover {
+            color: #0C5073;
+        }
+
+        .no-favorites {
+            text-align: center;
+            color: #666;
+            font-size: 1.1em;
+            margin-top: 50px;
+            padding: 40px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .login-message {
+            text-align: center;
+            color: #111433;
+            font-size: 1.2em;
+            margin-top: 50px;
+            padding: 40px;
+            background: #e3f2fd;
+            border: 2px solid #111433;
+            border-radius: 10px;
+        }
+
+        .login-message button {
             background-color: #111433;
             color: white;
-            font-size: 1.2em;
             border: none;
-            padding: 0.3em 0.3em;
+            padding: 12px 24px;
             border-radius: 8px;
+            font-size: 1em;
             cursor: pointer;
+            margin-top: 15px;
             transition: background-color 0.3s ease;
-            flex-shrink: 0;
         }
 
-        .fav-btn:hover {
+        .login-message button:hover {
             background-color: #0C5073;
-        }
-
-        .video {
-            border-bottom: 1px solid #111433;
-            padding-bottom: 20px;
-        }
-
-        .video:last-child {
-            border-bottom: none;
-        }
-
-        iframe {
-            width: 80%;
-            max-width: 900px;
-            height: 500px;
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            display: block;
-            margin: 0 auto;
-        }
-
-        #videos {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 0 20px;
         }
     </style>
 </head>
@@ -173,11 +191,14 @@
     <!--			 MAIN			 -->
 
     <main class="cd-main-content">
-        <h1 id="titre"></h1>
-        <div id="videos"></div>
+        <h1 id="titre">Mes favoris</h1>
 
+        <div class="favoris-container">
+            <ul class="video-links" id="favoris-list">
+                <!-- Chargé dynamiquement -->
+            </ul>
+        </div>
     </main>
-
 
     <!--			 MAIN			 -->
 
@@ -192,7 +213,7 @@
             target="_blank" href="mentions-legales.html">Mentions légales</a>
     </footer>
 
-
+    <!-- Script pour générer le menu dynamiquement -->
     <script>
         fetch("videos.json")
             .then(res => res.json())
@@ -242,7 +263,6 @@
                             ulVideos.appendChild(liVideo);
                         });
 
-
                         liSous.appendChild(ulVideos);
                         ulSecond.appendChild(liSous);
                     }
@@ -262,66 +282,9 @@
             });
     </script>
 
-
-    <script>
-        // Fonction pour lire les paramètres d'URL
-        function getQueryParam(name) {
-            return new URLSearchParams(window.location.search).get(name);
-        }
-
-        const grandCategorie = getQueryParam("categorie");
-        const sousCategorie = getQueryParam("souscat");
-
-        document.getElementById("titre").textContent = `${grandCategorie} - ${sousCategorie}`;
-
-        fetch("videos.json")
-            .then(res => res.json())
-            .then(data => {
-                const container = document.getElementById("videos");
-                const listeVideos = data[grandCategorie]?.[sousCategorie] || [];
-
-                if (listeVideos.length === 0) {
-                    container.innerHTML = "<p>Aucune vidéo trouvée.</p>";
-                    return;
-                }
-
-                listeVideos.forEach(video => {
-                    const div = document.createElement("div");
-                    div.className = "video";
-
-                    // Extraction de l'ID YouTube depuis l'URL embed
-                    let videoId = "";
-                    if (video.url && video.url.includes("embed/")) {
-                        videoId = video.url.split("embed/")[1].split(/[?&]/)[0];
-                    }
-
-                    div.innerHTML = `
-            <div class="video-header">
-                <h3>${video.titre}</h3>
-                <button class="fav-btn" data-id="${videoId}" data-label="${video.titre}"></button>
-            </div>
-            <iframe src="${video.url}" allowfullscreen></iframe>
-          `;
-
-                    container.appendChild(div);
-
-                });
-                //  Après avoir ajouté toutes les vidéos → forcer l'initialisation des boutons
-                if (typeof initAllButtons === "function") {
-                    setTimeout(initAllButtons, 200);
-                }
-            });
-
-        // Fonction utilitaire pour transformer une URL YouTube en ID
-        function extraireIdYoutube(url) {
-            const regex = /(?:youtube\.com\/.*v=|youtu\.be\/)([^&]+)/;
-            const match = url.match(regex);
-            return match ? match[1] : "";
-        }
-    </script>
-
+    <!-- Script Firebase pour l'affichage des favoris -->
     <script type="module">
-        // 1) Imports Firebase
+        // 1) Imports Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
         import {
             getAuth,
@@ -337,7 +300,7 @@
             setDoc
         } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-        // 2) Config Firebase
+        // 2) Configuration Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyA7r18GtsCIi1n2AoaBFG-lAYyBPXFIw4Q",
             authDomain: "imssa-2d3cb.firebaseapp.com",
@@ -348,70 +311,26 @@
             measurementId: "G-SKTEPM9LKC"
         };
 
-        // 3) Initialisation Firebase
+        // 3) Initialise Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Variables globales pour gérer l'état
-        let currentUser = null;
-        let userFavorites = [];
-        let buttonsInitialized = false;
-
-        // 4) Gestion du bouton Google Sign-In / Sign-Out
-        const btnGoogle = document.getElementById("btn-google");
-        btnGoogle.addEventListener("click", () => {
-            if (!currentUser) {
+        // 4) Bouton Google Sign-In/Out
+        const btnGoogle = document.getElementById('btn-google');
+        btnGoogle.addEventListener('click', () => {
+            if (!auth.currentUser) {
                 signInWithPopup(auth, new GoogleAuthProvider()).catch(console.error);
             } else {
                 signOut(auth).catch(console.error);
             }
         });
 
-        // 5) Fonction pour initialiser tous les boutons favoris
-        function initAllButtons() {
-            document.querySelectorAll(".fav-btn").forEach(btn => {
-                const { id, label } = btn.dataset;
-                if (id && label) {
-                    // Mettre à jour l'affichage
-                    btn.textContent = userFavorites.some(f => f.id === id) ? "❤️" : "🩶";
-                    // Ajouter l'event listener
-                    btn.onclick = () => toggleFavori(id, label, btn);
-                }
-            });
-            buttonsInitialized = true;
-        }
-
-        // 6) Observer pour détecter les nouveaux boutons ajoutés dynamiquement
-        const observer = new MutationObserver((mutations) => {
-            let newButtonsAdded = false;
-            mutations.forEach(mutation => {
-                mutation.addedNodes.forEach(node => {
-                    if (node.nodeType === 1) { // Element node
-                        if (node.classList?.contains('fav-btn') || node.querySelector?.('.fav-btn')) {
-                            newButtonsAdded = true;
-                        }
-                    }
-                });
-            });
-
-            if (newButtonsAdded && currentUser !== null) {
-                // Petit délai pour laisser le temps au DOM de se stabiliser
-                setTimeout(initAllButtons, 100);
-            }
-        });
-
-        // Démarrer l'observation des changements DOM
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-
-        // 7) Écoute de l'état de connexion
+        // 5) État de connexion et affichage des favoris
+        const favList = document.getElementById('favoris-list');
         const largeurEcran = window.innerWidth;
-        onAuthStateChanged(auth, async user => {
-            currentUser = user;
 
+        onAuthStateChanged(auth, async user => {
             if (user) {
                 if (largeurEcran > 1024) {
                     btnGoogle.textContent = `👤 ${user.displayName}`;
@@ -419,14 +338,14 @@
                     btnGoogle.textContent = `👤`;
                 }
 
-                // Récupérer les favoris
                 try {
-                    const ref = doc(db, "users", user.uid);
+                    const ref = doc(db, 'users', user.uid);
                     const snap = await getDoc(ref);
-                    userFavorites = snap.exists() ? snap.data().favoris : [];
+                    const favs = snap.exists() ? snap.data().favoris : [];
+                    renderFavoris(favs);
                 } catch (error) {
                     console.error("Erreur lors de la récupération des favoris:", error);
-                    userFavorites = [];
+                    favList.innerHTML = '<li class="no-favorites">Erreur lors du chargement des favoris.</li>';
                 }
             } else {
                 if (largeurEcran > 1024) {
@@ -434,119 +353,38 @@
                 } else {
                     btnGoogle.textContent = `🔒`;
                 }
-                userFavorites = [];
+                favList.innerHTML = `
+                    <div class="login-message">
+                        <p>Connectez-vous pour voir vos exercices favoris</p>
+                        <button onclick="document.getElementById('btn-google').click()">Se connecter avec Google</button>
+                    </div>
+                `;
             }
-
-            // Initialiser tous les boutons existants
-            initAllButtons();
         });
 
-        // 8) Fonction de gestion des favoris
-        async function toggleFavori(id, label, btn) {
-            if (!currentUser) {
-                alert("Connectez-vous d'abord pour gérer vos favoris.");
+        // 6) Fonction de rendu des favoris
+        function renderFavoris(favs) {
+            if (favs.length === 0) {
+                favList.innerHTML = '<li class="no-favorites">Aucun exercice dans vos favoris.<br>Ajoutez des exercices à vos favoris en cliquant sur ❤️</li>';
                 return;
             }
 
-            try {
-                const ref = doc(db, "users", currentUser.uid);
-                const idx = userFavorites.findIndex(f => f.id === id);
+            favList.innerHTML = '';
+            favs.forEach(video => {
+                const li = document.createElement('li');
+                li.className = 'video-item';
 
-                if (idx !== -1) {
-                    userFavorites.splice(idx, 1);
-                } else {
-                    userFavorites.push({ id, label });
-                }
+                // Construire l'URL vers la page vidéo avec les bons paramètres
+                const videoUrl = `https://www.youtube.com/embed/${video.id}`;
+                const pageUrl = `video.html?url=${encodeURIComponent(videoUrl)}&titre=${encodeURIComponent(video.label)}`;
 
-                // Sauvegarde en base
-                await setDoc(ref, { favoris: userFavorites }, { merge: true });
-
-                // Mise à jour immédiate du bouton
-                btn.textContent = idx !== -1 ? "🩶" : "❤️";
-
-            } catch (error) {
-                console.error("Erreur lors de la mise à jour des favoris:", error);
-                alert("Erreur lors de la sauvegarde. Veuillez réessayer.");
-            }
-        }
-
-        // Nettoyer l'observer quand la page se ferme
-        window.addEventListener('beforeunload', () => {
-            observer.disconnect();
-        });
-    </script>
-
-    <!-- OPTIMISATION LAZY LOADING DES IFRAMES -->
-    <script>
-        // Lazy loading pour les iframes YouTube
-        function setupLazyLoading() {
-            const iframes = document.querySelectorAll('iframe[src*="youtube.com"]');
-
-            // Créer un Intersection Observer
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const iframe = entry.target;
-                        // Vérifier si l'iframe n'a pas déjà été chargée
-                        if (!iframe.dataset.loaded) {
-                            // Marquer comme chargée
-                            iframe.dataset.loaded = 'true';
-                            // L'iframe est déjà chargée par défaut, on peut juste ajouter des paramètres d'optimisation
-                            const currentSrc = iframe.src;
-                            if (!currentSrc.includes('loading=lazy')) {
-                                iframe.src = currentSrc + (currentSrc.includes('?') ? '&' : '?') + 'loading=lazy&rel=0&modestbranding=1';
-                            }
-                        }
-                        // Ne plus observer cette iframe
-                        observer.unobserve(iframe);
-                    }
-                });
-            }, {
-                // Commencer à charger quand l'iframe est à 200px de l'écran
-                rootMargin: '200px',
-                threshold: 0.01
+                li.innerHTML = `
+                    <a href="${pageUrl}">
+                        ${video.label}
+                    </a>
+                `;
+                favList.appendChild(li);
             });
-
-            // Observer toutes les iframes
-            iframes.forEach(iframe => {
-                observer.observe(iframe);
-            });
-        }
-
-        // Fonction pour optimiser les iframes existantes et nouvelles
-        function optimizeYouTubeIframes() {
-            // Observer pour les nouvelles iframes ajoutées dynamiquement
-            const mutationObserver = new MutationObserver((mutations) => {
-                let newIframes = false;
-                mutations.forEach(mutation => {
-                    mutation.addedNodes.forEach(node => {
-                        if (node.nodeType === 1) {
-                            if (node.tagName === 'IFRAME' || node.querySelector('iframe')) {
-                                newIframes = true;
-                            }
-                        }
-                    });
-                });
-
-                if (newIframes) {
-                    setTimeout(setupLazyLoading, 100);
-                }
-            });
-
-            mutationObserver.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
-
-            // Setup initial
-            setupLazyLoading();
-        }
-
-        // Démarrer l'optimisation quand le DOM est prêt
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', optimizeYouTubeIframes);
-        } else {
-            optimizeYouTubeIframes();
         }
     </script>
 </body>
