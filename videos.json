@@ -1,0 +1,81 @@
+{
+  "Étirements-mobilité": {
+    "Membre inférieur": [
+      {
+        "titre": "Les pancakes",
+        "url": "https://www.youtube.com/embed/H1yJr7hWsZo?si=T_jte4dpVXYrz7MT"
+      },
+      {
+        "titre": "Le Gâteau au chocolat",
+        "url": "https://www.youtube.com/embed/GENxS5H7HqI?si=Hv0bMSdU0MJ_YD_o"
+      }
+    ],
+    "Membre supérieur": [
+      {
+        "titre": "La Paella - Rapide et Facile",
+        "url": "https://www.youtube.com/embed/hxYlBltSMY8?si=f9gGa9l0V94hnUF7"
+      }
+    ],
+    "Colonne": [
+      {
+        "titre": "La tomate burrata",
+        "url": "https://www.youtube.com/embed/XaHMWuCasmU?si=S_-7L5NekZOwVdI7"
+      },
+      {
+        "titre": "Poisson, Riz & Légumes",
+        "url": "https://www.youtube.com/embed/lTs-PwwGXfQ?si=xSu6FlNzzSgj_gsM"
+      },
+      {
+        "titre": "Faire ses cerises à l'eau de vie",
+        "url": "https://www.youtube.com/embed/qdXt4qH6H4k?si=OxdVZRrtJY-jFGaK"
+      }
+    ]
+  },
+
+
+  "Renforcement-proprioception": {
+    "Membre inférieur": [
+      {
+        "titre": "Courgette, Feta & Boulghour",
+        "url": "https://www.youtube.com/embed/VEpSv3VioW4?si=PfOtMJa3gbFLMraN"
+      }
+    ],
+    "Membre supérieur": [
+      {
+        "titre": "La poire au chocolat",
+        "url": "https://www.youtube.com/embed/5OBGG1UPh4M?si=1EGc8G-SBT0TnWAk"
+      }
+    ],
+    "Colonne": [
+      {
+        "titre": "Faire sa confiture maison",
+        "url": "https://www.youtube.com/embed/7Hv6Jq0FQYU?si=ptwx-VZwf9VIldam"
+      }
+    ]
+  },
+
+
+  "Réathlétisation": {
+    "Haut du corps": [
+      {
+        "titre": "Poulet et légumes au four",
+        "url": "https://www.youtube.com/embed/Ku5aj50iFYs?si=JFsyi6Vp67Y8J5EC"
+      }
+    ],
+    "Bas du corps": [
+      {
+        "titre": "Le poisson pané revisité",
+        "url": "https://www.youtube.com/embed/D-qY30iPv-E?si=wpErApJaMOrKAK0x"
+      }
+    ],
+    "Cardio": [
+      {
+        "titre": "Faire son thon confit",
+        "url": "https://www.youtube.com/embed/xToIrwwC1C4?si=XdEW-oTnumaDRYtD"
+      }
+    ]
+  },
+  "Autre": {
+
+  }
+}
