@@ -365,7 +365,10 @@
             if (!currentUser) {
                 signInWithPopup(auth, new GoogleAuthProvider()).catch(console.error);
             } else {
-                signOut(auth).catch(console.error);
+                // Demander confirmation avant déconnexion
+				if (confirm("Voulez-vous vraiment vous déconnecter ?")) {
+					signOut(auth).catch(console.error);
+				}
             }
         });
 

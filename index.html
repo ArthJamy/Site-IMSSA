@@ -352,14 +352,17 @@
 		const db = getFirestore(app);
 
 		// 4) Gestion du bouton Google Sign-In / Sign-Out
-		const btnGoogle = document.getElementById("btn-google");
-		btnGoogle.addEventListener("click", () => {
-			if (!auth.currentUser) {
-				signInWithPopup(auth, new GoogleAuthProvider()).catch(console.error);
-			} else {
-				signOut(auth).catch(console.error);
-			}
-		});
+			const btnGoogle = document.getElementById("btn-google");
+			btnGoogle.addEventListener("click", () => {
+				if (!auth.currentUser) {
+					signInWithPopup(auth, new GoogleAuthProvider()).catch(console.error);
+				} else {
+					// Demander confirmation avant déconnexion
+					if (confirm("Voulez-vous vraiment vous déconnecter ?")) {
+						signOut(auth).catch(console.error);
+					}
+				}
+			});
 
 		// 5) Écoute de l’état de connexion et initialisation des boutons ❤️/🩶
 		const largeurEcran = window.innerWidth; // Largeur de l'écran visible
