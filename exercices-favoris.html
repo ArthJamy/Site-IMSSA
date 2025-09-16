@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Consultez vos vidéos d'exercices favorites sur IMSSA 68 Mulhouse et retrouvez rapidement tous vos contenus préférés pour un entraînement simple et efficace.">
+    <meta name="robots" content="noindex">
 
     <link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
     <link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
@@ -105,13 +106,13 @@
     <header>
         <div class="navbar">
             <div>
-                <a href="index.html" class="nav__logo">
+                <a href="/" class="nav__logo">
                     <img src="img/logoIMSSA.ico" alt="logo IMSSA" id="logo_header"> IMSSA accueil
                 </a>
             </div>
             <div class="cd-dropdown-wrapper">
 
-                <a href="exercices-favoris.html" id="btn-fav" class="navbar-btn">❤️</a>
+                <a href="/exercices-favoris" id="btn-fav" class="navbar-btn">❤️</a>
                 <a href="#0" id="btn-google" class="navbar-btn">🔒</a>
 
                 <!--		 DROPDOWN		 -->
@@ -120,7 +121,7 @@
                     <h2>Menu</h2>
                     <a href="#0" class="cd-close">Fermer</a>
                     <ul class="cd-dropdown-content">
-                        <li> <a href="index.html">Accueil</a> </li>
+                        <li> <a href="/">Accueil</a> </li>
 
                         <li class="cd-divider">Exercices</li>
 
@@ -210,7 +211,7 @@
         <p>© 2025 IMSSA 68 – Tous droits réservés</p>
         <p>Centre sportif régional d'Alsace , 5 Rue des Frères Lumière, 68200 Mulhouse</p>
         <a target="_blank" href="https://imssa.monrdvkine.fr/Accueil/ContactCabinet/imssa">Contact</a> | <a
-            target="_blank" href="mentions-legales.html">Mentions légales</a>
+            target="_blank" href="/mentions-legales">Mentions légales</a>
     </footer>
 
     <!-- Script pour générer le menu dynamiquement -->
@@ -233,7 +234,7 @@
                     ulSecond.innerHTML = `
         <li class="go-back"><a href="#0">Menu</a></li>
 		<li class="see-all">
-		<a href="tous-les-exercices.html?categorie=${encodeURIComponent(grandCategorie)}">
+		<a href="/tous-les-exercices?categorie=${encodeURIComponent(grandCategorie)}">
 			Tous les exercices
 		</a>
 		</li>
@@ -250,7 +251,7 @@
                         ulVideos.innerHTML = `
           <li class="go-back"><a href="#0">Retour</a></li>
           <li class="see-all">
-			  <a href="voir-plus.html?categorie=${encodeURIComponent(grandCategorie)}&souscat=${encodeURIComponent(sousCat)}">
+			  <a href="/voir-plus?categorie=${encodeURIComponent(grandCategorie)}&souscat=${encodeURIComponent(sousCat)}">
 			    Voir tout
 			  </a>
 			</li>
@@ -259,7 +260,7 @@
                         sousCategories[sousCat].forEach(video => {
                             const liVideo = document.createElement("li");
                             // encodeURIComponent pour éviter les soucis avec les espaces ou caractères spéciaux
-                            liVideo.innerHTML = `<a href="video.html?url=${encodeURIComponent(video.url)}&titre=${encodeURIComponent(video.titre)}">${video.titre}</a>`;
+                            liVideo.innerHTML = `<a href="/video?url=${encodeURIComponent(video.url)}&titre=${encodeURIComponent(video.titre)}">${video.titre}</a>`;
                             ulVideos.appendChild(liVideo);
                         });
 
@@ -376,7 +377,7 @@
 
                 // Construire l'URL vers la page vidéo avec les bons paramètres
                 const videoUrl = `https://www.youtube.com/embed/${video.id}`;
-                const pageUrl = `video.html?url=${encodeURIComponent(videoUrl)}&titre=${encodeURIComponent(video.label)}`;
+                const pageUrl = `/video?url=${encodeURIComponent(videoUrl)}&titre=${encodeURIComponent(video.label)}`;
 
                 li.innerHTML = `
                     <a href="${pageUrl}">

@@ -102,13 +102,13 @@
     <header>
         <div class="navbar">
             <div>
-                <a href="index.html" class="nav__logo">
+                <a href="/" class="nav__logo">
                     <img src="img/logoIMSSA.ico" alt="logo IMSSA" id="logo_header"> IMSSA accueil
                 </a>
             </div>
             <div class="cd-dropdown-wrapper">
 
-                <a href="exercices-favoris.html" id="btn-fav" class="navbar-btn">❤️</a>
+                <a href="/exercices-favoris" id="btn-fav" class="navbar-btn">❤️</a>
                 <a href="#0" id="btn-google" class="navbar-btn">🔒</a>
 
                 <!--		 DROPDOWN		 -->
@@ -117,7 +117,7 @@
                     <h2>Menu</h2>
                     <a href="#0" class="cd-close">Fermer</a>
                     <ul class="cd-dropdown-content">
-                        <li> <a href="index.html">Accueil</a> </li>
+                        <li> <a href="/">Accueil</a> </li>
 
                         <li class="cd-divider">Exercices</li>
 
@@ -204,7 +204,7 @@
         <p>© 2025 IMSSA 68 – Tous droits réservés</p>
         <p>Centre sportif régional d'Alsace , 5 Rue des Frères Lumière, 68200 Mulhouse</p>
         <a target="_blank" href="https://imssa.monrdvkine.fr/Accueil/ContactCabinet/imssa">Contact</a> | <a
-            target="_blank" href="mentions-legales.html">Mentions légales</a>
+            target="_blank" href="/mentions-legales">Mentions légales</a>
     </footer>
 
 
@@ -228,7 +228,7 @@
                     ulSecond.innerHTML = `
         <li class="go-back"><a href="#0">Menu</a></li>
 		<li class="see-all">
-		<a href="tous-les-exercices.html?categorie=${encodeURIComponent(grandCategorie)}">
+		<a href="/tous-les-exercices?categorie=${encodeURIComponent(grandCategorie)}">
 			Tous les exercices
 		</a>
 		</li>
@@ -245,7 +245,7 @@
                         ulVideos.innerHTML = `
           <li class="go-back"><a href="#0">Retour</a></li>
           <li class="see-all">
-			  <a href="voir-plus.html?categorie=${encodeURIComponent(grandCategorie)}&souscat=${encodeURIComponent(sousCat)}">
+			  <a href="/voir-plus?categorie=${encodeURIComponent(grandCategorie)}&souscat=${encodeURIComponent(sousCat)}">
 			    Voir tout
 			  </a>
 			</li>
@@ -254,7 +254,7 @@
                         sousCategories[sousCat].forEach(video => {
                             const liVideo = document.createElement("li");
                             // encodeURIComponent pour éviter les soucis avec les espaces ou caractères spéciaux
-                            liVideo.innerHTML = `<a href="video.html?url=${encodeURIComponent(video.url)}&titre=${encodeURIComponent(video.titre)}">${video.titre}</a>`;
+                            liVideo.innerHTML = `<a href="/video?url=${encodeURIComponent(video.url)}&titre=${encodeURIComponent(video.titre)}">${video.titre}</a>`;
                             ulVideos.appendChild(liVideo);
                         });
 

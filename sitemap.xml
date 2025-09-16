@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
+   <url>
+      <loc>https://imssa68.pages.dev</loc>
+      <priority>1.0</priority>
+   </url>
+   <url>
+      <loc>https://imssa68.pages.dev/exercices-favoris</loc>
+      <priority>0.8</priority>
+   </url>
+   <url>
+      <loc>https://imssa68.pages.dev/voir-plus</loc>
+      <priority>0.7</priority>
+   </url>
+   <url>
+      <loc>https://imssa68.pages.dev/tous-les-exercices</loc>
+      <priority>0.7</priority>
+   </url>
+   <url>
+      <loc>https://imssa68.pages.dev/video</loc>
+      <priority>0.7</priority>
+   </url>
+</urlset>
