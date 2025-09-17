@@ -266,7 +266,15 @@ textarea {
     <h3>Aperçu du JSON généré :</h3>
     <textarea id="resultJSON" rows="15" readonly placeholder="Le JSON généré apparaîtra ici..."></textarea>
 </div>
-
+    
+<script>
+window.addEventListener("beforeunload", function (e) {
+    // Message personnalisé (affichage dépend du navigateur)
+    e.preventDefault();
+    e.returnValue = "Voulez-vous vraiment quitter cette page ? Vos modifications pourraient être perdues.";
+});
+</script>
+    
 <script>
 let jsonData = {}; 
 let isDataLoaded = false;
@@ -679,3 +687,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </body>
 </html>
+
