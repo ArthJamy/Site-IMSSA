@@ -102,6 +102,11 @@ button:hover {
     border: 1px solid #eee;
 }
 
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
 .card-header {
     display: flex;
     justify-content: space-between;
@@ -338,7 +343,14 @@ function ajouterBranche() {
     
     // Création de la nouvelle branche
     if (!current[newBranchName]) {
-        current[newBranchName] = {};
+        // Si on est à la racine, créer un objet
+        // Sinon (sous-catégorie), créer un tableau pour les vidéos
+        if (!parentPath) {
+            current[newBranchName] = {};
+        } else {
+            current[newBranchName] = [];
+        }
+        
         mettreAJourChemins();
         mettreAJourSelectsCategories(); // Mettre à jour les selects existants
         document.getElementById('newBranchName').value = '';
@@ -411,14 +423,12 @@ function genererOptionsCategories() {
         Object.keys(obj).forEach(key => {
             const nouveauChemin = chemin ? `${chemin} > ${key}` : key;
             
-            if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
-                // Ajouter cette branche comme option viable
+            if (Array.isArray(obj[key])) {
+                // Si c'est un tableau, c'est une catégorie finale (sous-catégorie)
                 options.push(nouveauChemin);
-                // Continuer à parcourir si elle a des sous-branches
+            } else if (typeof obj[key] === 'object') {
+                // Si c'est un objet, continuer à parcourir mais ne pas l'ajouter comme option
                 parcourir(obj[key], nouveauChemin);
-            } else if (Array.isArray(obj[key])) {
-                // Si c'est un tableau, c'est une catégorie finale
-                options.push(nouveauChemin);
             }
         });
     }
@@ -455,13 +465,13 @@ function ajouterCard() {
         <div class="card-form">
             <input type="text" placeholder="Titre de la vidéo" class="titre" onchange="updateCardTitle('${cardId}')">
             <div class="form-row">
-                <input type="text" placeholder="Collez l'iframe YouTube ici" class="iframe" oninput="updatePreview('${cardId}')">
+                <input type="text" placeholder="Collez n'importe quel lien YouTube ici" class="iframe" oninput="updatePreview('${cardId}')">
                 <select class="categorie">
                     ${categories.map(cat => `<option value="${cat}">${cat}</option>`).join('')}
                 </select>
             </div>
             <div class="preview empty">
-                Aucun aperçu disponible - Collez un iframe YouTube
+                Aucun aperçu disponible - Collez un lien YouTube
             </div>
         </div>
     `;
@@ -485,6 +495,43 @@ function updateCardTitle(cardId) {
     }
 }
 
+// Extraction de l'ID YouTube depuis n'importe quel type de lien
+function extractYouTubeId(url) {
+    try {
+        const parsedUrl = new URL(url);
+        // Cas 1 : youtube.com/watch?v=...
+        if (parsedUrl.hostname.includes("youtube.com")) {
+            if (parsedUrl.searchParams.has("v")) {
+                return parsedUrl.searchParams.get("v");
+            }
+            // Cas 2 : shorts
+            if (parsedUrl.pathname.startsWith("/shorts/")) {
+                return parsedUrl.pathname.split("/")[2];
+            }
+            // Cas 3 : embed déjà en place
+            if (parsedUrl.pathname.startsWith("/embed/")) {
+                return parsedUrl.pathname.split("/")[2];
+            }
+        }
+        // Cas 4 : youtu.be/ID
+        if (parsedUrl.hostname === "youtu.be") {
+            return parsedUrl.pathname.substring(1); // enlève le "/"
+        }
+    } catch (e) {
+        console.error("URL invalide :", url);
+    }
+    return null;
+}
+
+// Conversion vers URL embed
+function toEmbedUrl(url) {
+    const videoId = extractYouTubeId(url);
+    if (videoId) {
+        return "https://www.youtube-nocookie.com/embed/" + videoId;
+    }
+    return null;
+}
+
 // Récupération du titre réel de la vidéo YouTube
 async function obtenirTitreYouTube(videoId) {
     try {
@@ -501,31 +548,41 @@ async function obtenirTitreYouTube(videoId) {
     // Fallback: utiliser l'ID nettoyé comme avant
     return decodeURIComponent(videoId).replace(/[-_]/g, ' ');
 }
+// Mise à jour de l'aperçu vidéo
 function updatePreview(cardId) {
     const card = document.getElementById(cardId);
     const input = card.querySelector('.iframe');
     const previewDiv = card.querySelector('.preview');
-    const titreInput = card.querySelector('.titre');
+    const inputValue = input.value.trim();
     
-    const srcMatch = input.value.match(/src="([^"]+)"/);
+    if (!inputValue) {
+        previewDiv.className = 'preview empty';
+        previewDiv.innerHTML = 'Aucun aperçu disponible - Collez un lien YouTube ici';
+        return;
+    }
     
-    if (srcMatch) {
-        const videoUrl = srcMatch[1];
+    // Essayer d'extraire l'URL embed
+    let embedUrl = null;
+    
+    // Si c'est déjà un iframe, extraire l'URL src
+    const iframeSrcMatch = inputValue.match(/src="([^"]+)"/);
+    if (iframeSrcMatch) {
+        embedUrl = iframeSrcMatch[1];
+    } else {
+        // Sinon, traiter comme un lien YouTube normal
+        embedUrl = toEmbedUrl(inputValue);
+    }
+    
+    if (embedUrl) {
         previewDiv.className = 'preview';
-        previewDiv.innerHTML = `<iframe src="${videoUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+        previewDiv.innerHTML = `<iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
         
-        // Auto-remplissage du titre si vide
-        if (!titreInput.value.trim()) {
-            let urlPart = videoUrl.split('/embed/')[1];
-            if (urlPart) {
-                const titre = decodeURIComponent(urlPart.split('?')[0]).replace(/-/g, ' ');
-                titreInput.value = titre;
-                updateCardTitle(cardId);
-            }
-        }
+        // Stocker l'URL embed pour la génération JSON
+        input.dataset.embedUrl = embedUrl;
     } else {
         previewDiv.className = 'preview empty';
-        previewDiv.innerHTML = 'Aucun aperçu disponible - Collez un iframe YouTube';
+        previewDiv.innerHTML = 'URL YouTube non reconnue - Vérifiez le format';
+        input.dataset.embedUrl = '';
     }
 }
 
@@ -545,19 +602,22 @@ function genererJSON() {
     
     document.querySelectorAll('.card').forEach(card => {
         const titre = card.querySelector('.titre').value.trim();
-        const iframe = card.querySelector('.iframe').value.trim();
+        const input = card.querySelector('.iframe');
         const categorieComplete = card.querySelector('.categorie').value;
         
-        if (!titre || !iframe || !categorieComplete) {
+        if (!titre || !input.value.trim() || !categorieComplete) {
             erreurs.push('Une ou plusieurs cartes ont des champs manquants');
             return;
         }
         
-        const srcMatch = iframe.match(/src="([^"]+)"/);
-        const url = srcMatch ? srcMatch[1] : '';
+        // Récupérer l'URL embed depuis le dataset ou la calculer
+        let embedUrl = input.dataset.embedUrl;
+        if (!embedUrl) {
+            embedUrl = toEmbedUrl(input.value.trim());
+        }
         
-        if (!url) {
-            erreurs.push(`Iframe invalide pour la vidéo "${titre}"`);
+        if (!embedUrl) {
+            erreurs.push(`URL YouTube invalide pour la vidéo "${titre}"`);
             return;
         }
         
@@ -566,16 +626,16 @@ function genererJSON() {
             const pathParts = categorieComplete.split(' > ');
             let current = newJson;
             
-            // Créer la structure si elle n'existe pas
+            // Naviguer jusqu'au dernier niveau
             for (let i = 0; i < pathParts.length; i++) {
                 const part = pathParts[i];
                 if (i === pathParts.length - 1) {
-                    // Dernier niveau : doit être un tableau
+                    // Dernier niveau : doit être un tableau pour les vidéos
                     if (!current[part]) current[part] = [];
                     if (!Array.isArray(current[part])) {
                         current[part] = [];
                     }
-                    current[part].push({ titre, url });
+                    current[part].push({ titre, url: embedUrl });
                 } else {
                     // Niveau intermédiaire : doit être un objet
                     if (!current[part]) current[part] = {};
