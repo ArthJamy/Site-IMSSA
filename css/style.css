@@ -195,7 +195,7 @@ Main Components
   transform: rotate(-45deg);
 }
 
-@media only screen and (min-width: 1024px), (min-height: 672px) {
+@media only screen and (min-width: 1024px) {
   .navbar-btn{
       padding: 0 36px 0 20px;
   }
@@ -248,7 +248,7 @@ Main Components
   line-height: 50px;
 }
 
-@media only screen and (min-width: 768px), (min-height: 672px) {
+@media only screen and (min-width: 768px) {
 
   .cd-dropdown h2,
   .cd-dropdown-content a,
@@ -258,7 +258,7 @@ Main Components
   }
 }
 
-@media only screen and (min-width: 1024px), (min-height: 672px) {
+@media only screen and (min-width: 1024px) {
 
   .cd-dropdown h2,
   .cd-dropdown-content a,
@@ -374,13 +374,13 @@ Main Components
   transition: transform 0.5s 0s, visibility 0s 0s;
 }
 
-@media only screen and (min-width: 768px), (min-height: 672px) {
+@media only screen and (min-width: 768px) {
   .cd-dropdown .cd-close {
     top: 5px;
   }
 }
 
-@media only screen and (min-width: 1024px), (min-height: 672px) {
+@media only screen and (min-width: 1024px) {
   .cd-dropdown {
     position: absolute;
     top: calc(100% - 4px);
@@ -550,7 +550,7 @@ Main Components
   -webkit-overflow-scrolling: touch;
 }
 
-@media only screen and (min-width: 768px), (min-height: 672px) {
+@media only screen and (min-width: 768px) {
 
   .cd-dropdown-content,
   .cd-dropdown-content ul {
@@ -563,7 +563,7 @@ Main Components
   }
 }
 
-@media only screen and (min-width: 1024px), (min-height: 672px) {
+@media only screen and (min-width: 1024px) {
 
   .cd-dropdown-content,
   .cd-dropdown-content ul {
@@ -695,7 +695,7 @@ Main Components
 }
 
 
-@media only screen and (min-width: 1024px), (min-height: 672px) {
+@media only screen and (min-width: 1024px) {
   .cd-dropdown-content {
     /* reset mobile style */
     position: static;
@@ -1167,7 +1167,7 @@ Main Components
   color: rgba(17, 20, 51, 0.4);
 }
 
-@media only screen and (min-width: 1024px), (min-height: 672px) {
+@media only screen and (min-width: 1024px) {
   .cd-search input[type="search"] {
     background-color: #ebebeb;
   }
@@ -1229,7 +1229,7 @@ Main Components
   transform: rotate(-45deg);
 }
 
-@media only screen and (min-width: 1024px), (min-height: 672px) {
+@media only screen and (min-width: 1024px) {
 
   .has-children>a::before,
   .has-children>a::after,
@@ -1254,7 +1254,7 @@ Main Components
   transform-origin: 9px 50%;
 }
 
-@media only screen and (min-width: 1024px), (min-height: 672px) {
+@media only screen and (min-width: 1024px) {
   .cd-dropdown-content>.has-children>a {
     padding-left: 40px;
     padding-right: 20px;
