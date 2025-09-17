@@ -252,8 +252,6 @@ textarea {
         <button onclick="ajouterBranche()" class="btn-success">+ Créer branche</button>
         <button onclick="supprimerBranche()" style="background-color: #dc3545;">🗑️ Supprimer branche</button>
     </div>
-    
-    <button id="ajouterBtn">+ Ajouter une vidéo</button>
 </div>
 
 <div id="loadingMessage" class="loading">Chargement des données...</div>
@@ -261,12 +259,13 @@ textarea {
 
 <div class="json-section">
     <button onclick="genererJSON()">🔄 Générer JSON et copier</button>
+    <button id="ajouterBtn">+ Ajouter une vidéo</button>
     <div id="statusMessage"></div>
     
     <h3>Aperçu du JSON généré :</h3>
     <textarea id="resultJSON" rows="15" readonly placeholder="Le JSON généré apparaîtra ici..."></textarea>
 </div>
-    
+
 <script>
 window.addEventListener("beforeunload", function (e) {
     // Message personnalisé (affichage dépend du navigateur)
@@ -274,7 +273,7 @@ window.addEventListener("beforeunload", function (e) {
     e.returnValue = "Voulez-vous vraiment quitter cette page ? Vos modifications pourraient être perdues.";
 });
 </script>
-    
+
 <script>
 let jsonData = {}; 
 let isDataLoaded = false;
@@ -687,4 +686,3 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </body>
 </html>
-
