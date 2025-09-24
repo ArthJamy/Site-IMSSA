@@ -87,6 +87,22 @@ button:hover {
     background-color: #218838;
 }
 
+#ajouterBtn {
+    background-color: #28a745;
+}
+
+#ajouterBtn:hover {
+    background-color: #218838;
+}
+
+.btn-download {
+    background-color: #6c757d;
+}
+
+.btn-download:hover {
+    background-color: #545b62;
+}
+
 .cards-container {
     display: grid;
     gap: 20px;
@@ -100,6 +116,16 @@ button:hover {
     transition: all 0.3s;
     position: relative;
     border: 1px solid #eee;
+}
+
+.card.loaded {
+    background: #f8f4ff;
+    border-left: 4px solid #6f42c1;
+}
+
+.card.loaded .card-title::after {
+    content: " 📥";
+    font-size: 12px;
 }
 
 .card:hover {
@@ -184,6 +210,21 @@ button:hover {
     margin-top: 0;
 }
 
+.json-controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.btn-load {
+    background-color: #6f42c1;
+}
+
+.btn-load:hover {
+    background-color: #5a32a3;
+}
+
 textarea { 
     width: 100%; 
     font-family: 'Consolas', 'Monaco', monospace; 
@@ -193,11 +234,52 @@ textarea {
     background: #fff;
 }
 
+/* Message de statut fixe en haut */
 .status-message {
-    padding: 10px;
-    border-radius: 6px;
-    margin-top: 10px;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    padding: 12px 24px;
+    border-radius: 8px;
     font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: all 0.3s ease;
+    max-width: 90%;
+    text-align: center;
+}
+
+.status-message.show {
+    opacity: 1;
+    animation: slideDown 0.3s ease;
+}
+
+.status-message.hide {
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateX(-50%) translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(-50%) translateY(-20px);
+        opacity: 0;
+    }
 }
 
 .status-success {
@@ -227,10 +309,110 @@ textarea {
         grid-template-columns: 1fr;
     }
     
+    .json-controls {
+        flex-direction: column;
+    }
+    
     body {
         margin: 10px;
         font-size: 14px;
     }
+}
+
+/* Modal pour la sélection des catégories */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 12px;
+    width: 80%;
+    max-width: 500px;
+    max-height: 70%;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { 
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal h3 {
+    color: #0C5073;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.category-list {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.category-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    transition: background-color 0.2s;
+}
+
+.category-item:hover {
+    background-color: #f8f9fa;
+}
+
+.category-item input[type="checkbox"] {
+    margin-right: 10px;
+    transform: scale(1.2);
+}
+
+.category-item label {
+    margin: 0;
+    cursor: pointer;
+    flex-grow: 1;
+    font-weight: normal;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.btn-cancel {
+    background-color: #6c757d;
+}
+
+.btn-cancel:hover {
+    background-color: #545b62;
 }
 </style>
 </head>
@@ -258,12 +440,30 @@ textarea {
 <div id="cardsContainer" class="cards-container" style="display: none;"></div>
 
 <div class="json-section">
-    <button onclick="genererJSON()">🔄 Générer JSON et copier</button>
-    <button id="ajouterBtn">+ Ajouter une vidéo</button>
-    <div id="statusMessage"></div>
+    <div class="json-controls">
+        <button id="ajouterBtn">+ Ajouter une vidéo </button>
+        <button onclick="genererJSON()">🔄 Générer JSON et copier</button>
+        <button onclick="telechargerJSON()" class="btn-download">⬇️ Télécharger JSON</button>
+        <button onclick="ouvrirModalChargement()" class="btn-load">📥 Charger vidéos existantes</button>
+    </div>
+    <div id="statusMessage" class="status-message"></div>
     
     <h3>Aperçu du JSON généré :</h3>
     <textarea id="resultJSON" rows="15" readonly placeholder="Le JSON généré apparaîtra ici..."></textarea>
+</div>
+
+<!-- Modal pour la sélection des catégories -->
+<div id="categoryModal" class="modal">
+    <div class="modal-content">
+        <h3>Sélectionner les catégories à charger</h3>
+        <div class="category-list" id="categoryList">
+            <!-- Les catégories seront ajoutées ici dynamiquement -->
+        </div>
+        <div class="modal-buttons">
+            <button onclick="fermerModalChargement()" class="btn-cancel">Annuler</button>
+            <button onclick="chargerVideosSelectionnees()" class="btn-success">Charger les vidéos</button>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -277,6 +477,7 @@ window.addEventListener("beforeunload", function (e) {
 <script>
 let jsonData = {}; 
 let isDataLoaded = false;
+let videosOriginalesChargees = new Set(); // Tracker des vidéos chargées à l'origine
 
 // Chargement des données JSON
 async function chargerDonnees() {
@@ -328,6 +529,14 @@ function mettreAJourChemins() {
     ajouterChemins(jsonData);
 }
 
+// Vérification de la profondeur d'un chemin pour limiter à 2 niveaux max
+function estProfondeurMax(chemin) {
+    if (!chemin) return false; // Racine = profondeur 0, autorisée
+    
+    const pathParts = chemin.split(' > ');
+    return pathParts.length >= 2; // Profondeur 2 = maximum (Partie > Sous-partie)
+}
+
 // Création d'une nouvelle branche
 function ajouterBranche() {
     const parentPath = document.getElementById('parentPath').value;
@@ -335,6 +544,12 @@ function ajouterBranche() {
     
     if (!newBranchName) {
         afficherMessage("Veuillez saisir un nom pour la nouvelle branche.", "error");
+        return;
+    }
+    
+    // Vérifier si on dépasse la profondeur maximale (2 niveaux)
+    if (estProfondeurMax(parentPath)) {
+        afficherMessage("Impossible de créer une sous-branche à ce niveau. Structure limitée à : Partie > Sous-partie.", "error");
         return;
     }
     
@@ -350,8 +565,8 @@ function ajouterBranche() {
     
     // Création de la nouvelle branche
     if (!current[newBranchName]) {
-        // Si on est à la racine, créer un objet
-        // Sinon (sous-catégorie), créer un tableau pour les vidéos
+        // Si on est à la racine, créer un objet (partie principale)
+        // Si on est au niveau 1, créer un tableau pour les vidéos (sous-partie)
         if (!parentPath) {
             current[newBranchName] = {};
         } else {
@@ -411,15 +626,29 @@ function mettreAJourSelectsCategories() {
         }
     });
 }
+
+// Nouvelle fonction pour afficher les messages avec animation
 function afficherMessage(message, type) {
     const statusDiv = document.getElementById('statusMessage');
+    
+    // Nettoyer les anciennes animations
+    statusDiv.classList.remove('show', 'hide');
     statusDiv.className = `status-message status-${type}`;
     statusDiv.textContent = message;
     
+    // Forcer le reflow avant d'ajouter la classe show
+    statusDiv.offsetHeight;
+    statusDiv.classList.add('show');
+    
     setTimeout(() => {
-        statusDiv.textContent = '';
-        statusDiv.className = '';
-    }, 5000);
+        statusDiv.classList.remove('show');
+        statusDiv.classList.add('hide');
+        
+        setTimeout(() => {
+            statusDiv.textContent = '';
+            statusDiv.className = 'status-message';
+        }, 300);
+    }, 4000);
 }
 
 // Génération des options de catégories
@@ -555,6 +784,7 @@ async function obtenirTitreYouTube(videoId) {
     // Fallback: utiliser l'ID nettoyé comme avant
     return decodeURIComponent(videoId).replace(/[-_]/g, ' ');
 }
+
 // Mise à jour de l'aperçu vidéo
 function updatePreview(cardId) {
     const card = document.getElementById(cardId);
@@ -601,9 +831,32 @@ function supprimerCard(cardId) {
     }
 }
 
-// Génération du JSON final
+// Génération du JSON final avec fusion intelligente
 function genererJSON() {
+    // 1. Partir du JSON existant complet (preserve les vidéos non touchées)
     const newJson = JSON.parse(JSON.stringify(jsonData));
+    
+    // 2. Supprimer les vidéos qui ont été originalement chargées de leurs emplacements d'origine
+    videosOriginalesChargees.forEach(videoDataStr => {
+        try {
+            const videoOrigine = JSON.parse(videoDataStr);
+            const pathParts = videoOrigine.chemin.split(' > ');
+            
+            if (pathParts.length === 2) {
+                const [partie, sousPart] = pathParts;
+                if (newJson[partie] && Array.isArray(newJson[partie][sousPart])) {
+                    // Supprimer la vidéo originale de son emplacement d'origine
+                    newJson[partie][sousPart] = newJson[partie][sousPart].filter(video => 
+                        !(video.titre === videoOrigine.titre && video.url === videoOrigine.url)
+                    );
+                }
+            }
+        } catch (error) {
+            console.error('Erreur lors de la suppression de la vidéo originale:', error);
+        }
+    });
+    
+    // 3. Ajouter toutes les cartes actuelles (nouvelles + chargées éventuellement modifiées)
     let compteurVideos = 0;
     let erreurs = [];
     
@@ -664,18 +917,269 @@ function genererJSON() {
         return;
     }
     
-    if (compteurVideos === 0) {
+    // Compter aussi les vidéos préservées du JSON original
+    let videosPreservees = 0;
+    function compterVideosRecursivement(obj) {
+        Object.values(obj).forEach(value => {
+            if (Array.isArray(value)) {
+                videosPreservees += value.length;
+            } else if (typeof value === 'object') {
+                compterVideosRecursivement(value);
+            }
+        });
+    }
+    compterVideosRecursivement(newJson);
+    
+    if (videosPreservees === 0) {
         afficherMessage("Aucune vidéo valide à traiter.", "error");
         return;
     }
     
     // Copie dans le presse-papier
     navigator.clipboard.writeText(jsonText).then(() => {
-        afficherMessage(`JSON généré avec ${compteurVideos} vidéo(s) et copié dans le presse-papier !`, "success");
+        const cartesTraitees = compteurVideos;
+        const totalVideos = videosPreservees;
+        afficherMessage(`JSON généré avec ${totalVideos} vidéo(s) total (${cartesTraitees} depuis les cartes) et copié dans le presse-papier !`, "success");
     }).catch(err => {
         console.error('Erreur lors de la copie:', err);
-        afficherMessage(`JSON généré avec ${compteurVideos} vidéo(s). Erreur lors de la copie.`, "error");
+        afficherMessage(`JSON généré avec ${videosPreservees} vidéo(s). Erreur lors de la copie.`, "error");
     });
+}
+
+// Nouvelle fonction pour télécharger le JSON
+function telechargerJSON() {
+    const jsonText = document.getElementById('resultJSON').value;
+    
+    if (!jsonText || jsonText === "Le JSON généré apparaîtra ici...") {
+        afficherMessage("Générez d'abord le JSON avant de le télécharger.", "error");
+        return;
+    }
+    
+    try {
+        // Créer un blob avec le contenu JSON
+        const blob = new Blob([jsonText], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        // Créer un lien de téléchargement temporaire
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `videos_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        // Nettoyer l'URL temporaire
+        URL.revokeObjectURL(url);
+        
+        afficherMessage("Fichier JSON téléchargé avec succès !", "success");
+    } catch (error) {
+        console.error('Erreur lors du téléchargement:', error);
+        afficherMessage("Erreur lors du téléchargement du fichier.", "error");
+    }
+}
+
+// Fonction pour ouvrir le modal de sélection des catégories
+function ouvrirModalChargement() {
+    if (!isDataLoaded || Object.keys(jsonData).length === 0) {
+        afficherMessage("Aucune donnée à charger. Le fichier JSON est vide.", "error");
+        return;
+    }
+    
+    const modal = document.getElementById('categoryModal');
+    const categoryList = document.getElementById('categoryList');
+    
+    // Vider la liste précédente
+    categoryList.innerHTML = '';
+    
+    // Générer la liste des parties principales
+    Object.keys(jsonData).forEach(partie => {
+        if (typeof jsonData[partie] === 'object' && !Array.isArray(jsonData[partie])) {
+            const div = document.createElement('div');
+            div.className = 'category-item';
+            div.innerHTML = `
+                <input type="checkbox" id="cat_${partie}" value="${partie}">
+                <label for="cat_${partie}"><strong>${partie}</strong></label>
+            `;
+            categoryList.appendChild(div);
+            
+            // Ajouter les sous-catégories avec indentation
+            Object.keys(jsonData[partie]).forEach(sousPart => {
+                if (Array.isArray(jsonData[partie][sousPart])) {
+                    const subDiv = document.createElement('div');
+                    subDiv.className = 'category-item';
+                    subDiv.style.paddingLeft = '30px';
+                    const fullPath = `${partie} > ${sousPart}`;
+                    subDiv.innerHTML = `
+                        <input type="checkbox" id="cat_${partie}_${sousPart}" value="${fullPath}">
+                        <label for="cat_${partie}_${sousPart}">└─ ${sousPart}</label>
+                    `;
+                    categoryList.appendChild(subDiv);
+                }
+            });
+        }
+    });
+    
+    modal.style.display = 'block';
+}
+
+// Fonction pour fermer le modal
+function fermerModalChargement() {
+    document.getElementById('categoryModal').style.display = 'none';
+}
+
+// Fonction pour charger les vidéos sélectionnées
+function chargerVideosSelectionnees() {
+    const checkboxes = document.querySelectorAll('#categoryList input[type="checkbox"]:checked');
+    
+    if (checkboxes.length === 0) {
+        afficherMessage("Sélectionnez au moins une catégorie à charger.", "error");
+        return;
+    }
+    
+    let compteurChargees = 0;
+    let compteurDoublons = 0;
+    const videosExistantes = getVideosExistantes();
+    
+    checkboxes.forEach(checkbox => {
+        const chemin = checkbox.value;
+        const pathParts = chemin.split(' > ');
+        
+        let videos = [];
+        if (pathParts.length === 1) {
+            // Partie principale - charger toutes les sous-catégories
+            const partie = pathParts[0];
+            if (jsonData[partie]) {
+                Object.keys(jsonData[partie]).forEach(sousPart => {
+                    if (Array.isArray(jsonData[partie][sousPart])) {
+                        jsonData[partie][sousPart].forEach(video => {
+                            videos.push({
+                                ...video,
+                                categorie: `${partie} > ${sousPart}`,
+                                cheminOriginal: `${partie} > ${sousPart}` // Tracker le chemin d'origine
+                            });
+                        });
+                    }
+                });
+            }
+        } else {
+            // Sous-catégorie spécifique
+            const [partie, sousPart] = pathParts;
+            if (jsonData[partie] && jsonData[partie][sousPart] && Array.isArray(jsonData[partie][sousPart])) {
+                videos = jsonData[partie][sousPart].map(video => ({
+                    ...video,
+                    categorie: chemin,
+                    cheminOriginal: chemin // Tracker le chemin d'origine
+                }));
+            }
+        }
+        
+        // Créer les cartes pour chaque vidéo (en évitant les doublons)
+        videos.forEach(video => {
+            const cleVideo = `${video.titre}|${video.url}`;
+            if (!videosExistantes.has(cleVideo)) {
+                creerCarteDepuisVideo(video, true);
+                compteurChargees++;
+                videosExistantes.add(cleVideo);
+                
+                // Ajouter au tracker des vidéos originales avec leur chemin
+                videosOriginalesChargees.add(JSON.stringify({
+                    titre: video.titre,
+                    url: video.url,
+                    chemin: video.cheminOriginal
+                }));
+            } else {
+                compteurDoublons++;
+            }
+        });
+    });
+    
+    // Fermer le modal
+    fermerModalChargement();
+    
+    // Afficher le résultat
+    let message = `${compteurChargees} vidéo(s) chargée(s) avec succès !`;
+    if (compteurDoublons > 0) {
+        message += ` (${compteurDoublons} doublon(s) ignoré(s))`;
+    }
+    afficherMessage(message, "success");
+}
+
+// Fonction utilitaire pour récupérer les vidéos déjà présentes
+function getVideosExistantes() {
+    const videosExistantes = new Set();
+    document.querySelectorAll('.card').forEach(card => {
+        const titre = card.querySelector('.titre').value.trim();
+        const input = card.querySelector('.iframe');
+        let url = input.dataset.embedUrl || '';
+        if (!url && input.value.trim()) {
+            url = toEmbedUrl(input.value.trim()) || input.value.trim();
+        }
+        if (titre && url) {
+            videosExistantes.add(`${titre}|${url}`);
+        }
+    });
+    return videosExistantes;
+}
+
+// Fonction pour créer une carte à partir d'une vidéo du JSON
+function creerCarteDepuisVideo(video, estChargee = false) {
+    const container = document.getElementById('cardsContainer');
+    const categories = genererOptionsCategories();
+    
+    if (categories.length === 0) {
+        afficherMessage("Aucune catégorie disponible. Créez d'abord une branche.", "error");
+        return;
+    }
+    
+    const cardId = 'card_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    const div = document.createElement('div');
+    div.className = estChargee ? 'card loaded' : 'card';
+    div.id = cardId;
+    
+    // Ajouter un attribut data pour tracker l'origine si c'est une carte chargée
+    if (estChargee && video.cheminOriginal) {
+        div.setAttribute('data-origine', JSON.stringify({
+            titre: video.titre,
+            url: video.url,
+            chemin: video.cheminOriginal
+        }));
+    }
+    
+    div.innerHTML = `
+        <div class="card-header">
+            <div class="card-title">${video.titre}</div>
+            <button class="supprimer" onclick="supprimerCard('${cardId}')">🗑️ Supprimer</button>
+        </div>
+        <div class="card-form">
+            <input type="text" placeholder="Titre de la vidéo" class="titre" value="${video.titre}" onchange="updateCardTitle('${cardId}')">
+            <div class="form-row">
+                <input type="text" placeholder="Collez n'importe quel lien YouTube ici" class="iframe" value="${video.url}" oninput="updatePreview('${cardId}')">
+                <select class="categorie">
+                    ${categories.map(cat => `<option value="${cat}" ${cat === video.categorie ? 'selected' : ''}>${cat}</option>`).join('')}
+                </select>
+            </div>
+            <div class="preview">
+                <iframe src="${video.url}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+        </div>
+    `;
+    
+    container.appendChild(div);
+    
+    // Stocker l'URL embed dans le dataset
+    const input = div.querySelector('.iframe');
+    input.dataset.embedUrl = video.url;
+    
+    return cardId;
+}
+
+// Fermer le modal en cliquant à l'extérieur
+window.onclick = function(event) {
+    const modal = document.getElementById('categoryModal');
+    if (event.target === modal) {
+        fermerModalChargement();
+    }
 }
 
 // Initialisation

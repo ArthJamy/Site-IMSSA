@@ -92,6 +92,12 @@
                     <ul class="cd-dropdown-content">
                         <li> <a href="/">Accueil</a> </li>
 
+                        <li>
+							<form class="cd-search" action="/recherche" method="get">
+								<input type="search" name="q" placeholder=" 🔍 Rechercher...">
+							</form>
+						</li>
+
                         <li class="cd-divider">Exercices</li>
 
                         <!-- Ici on injecte dynamiquement les catégories JSON -->
@@ -251,6 +257,7 @@
 
                             sousCategories[sousCat].forEach(video => {
                                 const liVideo = document.createElement("li");
+                                liVideo.classList.add("video-item");
                                 // encodeURIComponent pour éviter les soucis avec les espaces ou caractères spéciaux
                                 liVideo.innerHTML = `<a href="/video?url=${encodeURIComponent(video.url)}&titre=${encodeURIComponent(video.titre)}">${video.titre}</a>`;
                                 ulVideos.appendChild(liVideo);
