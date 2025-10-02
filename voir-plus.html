@@ -319,6 +319,7 @@
                 if (typeof initAllButtons === "function") {
                     setTimeout(initAllButtons, 200);
                 }
+                
             });
 
         // Fonction utilitaire pour transformer une URL YouTube en ID
@@ -393,6 +394,7 @@
             });
             buttonsInitialized = true;
         }
+        window.initAllButtons = initAllButtons;
 
         // 6) Observer pour détecter les nouveaux boutons ajoutés dynamiquement
         const observer = new MutationObserver((mutations) => {
