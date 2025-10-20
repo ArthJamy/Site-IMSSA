@@ -4,10 +4,9 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="Découvrez le cabinet IMSSA 68 Mulhouse: accédez à des vidéos d'exercices pour vous entraîner à votre rythme et sauvegardez vos favoris pour un suivi personnalisé.">
-	<meta property="og:site_name" content="IMSSA 68 Mulhouse" />
-	<meta name="application-name" content="IMSSA 68 Mulhouse" />
-	<meta name="apple-mobile-web-app-title" content="IMSSA 68 Mulhouse" />
+	<meta name="description"
+		content="Découvrez le cabinet IMSSA 68 Mulhouse: accédez à des vidéos d'exercices pour vous entraîner à votre rythme et sauvegardez vos favoris pour un suivi personnalisé.">
+
 
 	<link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
 	<link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
@@ -125,15 +124,18 @@
 
 						<li>
 							<form class="cd-search" action="/recherche" method="get">
-								<input type="search" name="q" placeholder=" 🔍 Rechercher...">
+								<input type="search" name="q" id="searchInput" placeholder=" 🔍 Rechercher..."
+									autocomplete="off" autocorrect="off" list="suggestions">
+								<datalist id="suggestions"></datalist>
 							</form>
+
 						</li>
 
 						<li class="cd-divider">Exercices</li>
 
 						<!-- Ici on injecte dynamiquement les catégories JSON -->
 						<li id="menu"></li>
-						
+
 						<li class="cd-divider">Autre</li>
 
 						<li class="has-children">
@@ -371,17 +373,17 @@
 		const db = getFirestore(app);
 
 		// 4) Gestion du bouton Google Sign-In / Sign-Out
-			const btnGoogle = document.getElementById("btn-google");
-			btnGoogle.addEventListener("click", () => {
-				if (!auth.currentUser) {
-					signInWithPopup(auth, new GoogleAuthProvider()).catch(console.error);
-				} else {
-					// Demander confirmation avant déconnexion
-					if (confirm("Voulez-vous vraiment vous déconnecter ?")) {
-						signOut(auth).catch(console.error);
-					}
+		const btnGoogle = document.getElementById("btn-google");
+		btnGoogle.addEventListener("click", () => {
+			if (!auth.currentUser) {
+				signInWithPopup(auth, new GoogleAuthProvider()).catch(console.error);
+			} else {
+				// Demander confirmation avant déconnexion
+				if (confirm("Voulez-vous vraiment vous déconnecter ?")) {
+					signOut(auth).catch(console.error);
 				}
-			});
+			}
+		});
 
 		// 5) Écoute de l’état de connexion et initialisation des boutons ❤️/🩶
 		const largeurEcran = window.innerWidth; // Largeur de l'écran visible
@@ -432,7 +434,10 @@
 				btn.onclick = () => toggleFavori(id, label, btn, uid);
 			});
 		}
+
 	</script>
+	<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+	<script src="js/autocomplete.js"></script>
 </body>
 
 </html>

@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Recherchez parmi tous les exercices du cabinet IMSSA 68 Mulhouse. Trouvez rapidement les vidéos d'exercices kiné et sport qui vous intéressent.">
+    <meta name="description"
+        content="Recherchez parmi tous les exercices du cabinet IMSSA 68 Mulhouse. Trouvez rapidement les vidéos d'exercices kiné et sport qui vous intéressent.">
     <meta name="robots" content="noindex">
 
     <link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
@@ -15,7 +16,7 @@
     <link rel="icon" href="img/logoIMSSA.ico" type="image/x-icon">
 
     <title>Recherche - IMSSA 68 Mulhouse</title>
-    
+
     <!-- CF resultats.js si fuse ne fonctionne plus -->
 
     <style>
@@ -137,10 +138,12 @@
                         <li> <a href="/">Accueil</a> </li>
 
                         <li>
-							<form class="cd-search" action="/recherche" method="get">
-								<input type="search" name="q" placeholder=" 🔍 Rechercher...">
-							</form>
-						</li>
+                            <form class="cd-search" action="/recherche" method="get">
+                                <input type="search" name="q" id="searchInput" placeholder=" 🔍 Rechercher..."
+                                    autocomplete="off" autocorrect="off" list="suggestions">
+                                <datalist id="suggestions"></datalist>
+                            </form>
+                        </li>
 
                         <li id="menu"></li>
 
@@ -178,7 +181,7 @@
                                         <h3>MonRdvKiné</h3>
                                         <p>Prendre rendez-vous</p>
                                     </a>
-                                    </li>
+                                </li>
 
                                 <li>
                                     <a class="cd-dropdown-item item-5" href="tel:+33658906142">
@@ -226,7 +229,7 @@
 
     <!------------------------------------------- Chargement du menu dynamique -->
     <script>
-        fetch("videos.json")
+          fetch("videos.json")
             .then(res => res.json())
             .then(data => {
                 const menu = document.getElementById("menu");
@@ -292,37 +295,8 @@
 
     <!------------------------------------------- Script de recherche avec Fuse.js -->
     <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+    <script src="js/autocomplete.js"></script>
     <script>
-        async function loadVideos() {
-            try {
-                const response = await fetch("videos.json");
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const videosData = await response.json();
-
-                // Transformer en tableau plat
-                const videos = [];
-                for (const categorie in videosData) {
-                    for (const branche in videosData[categorie]) {
-                        videosData[categorie][branche].forEach(video => {
-                            videos.push({
-                                titre: video.titre,
-                                url: video.url,
-                                categorie,
-                                branche
-                            });
-                        });
-                    }
-                }
-
-                return videos;
-            } catch (error) {
-                console.error("Erreur lors du chargement des vidéos:", error);
-                throw error;
-            }
-        }
-
         async function searchVideos(query) {
             const videos = await loadVideos();
 

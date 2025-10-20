@@ -94,7 +94,9 @@
 
                         <li>
 							<form class="cd-search" action="/recherche" method="get">
-								<input type="search" name="q" placeholder=" 🔍 Rechercher...">
+								<input type="search" name="q" id="searchInput" placeholder=" 🔍 Rechercher..."
+									autocomplete="off" autocorrect="off" list="suggestions">
+								<datalist id="suggestions"></datalist>
 							</form>
 						</li>
 
@@ -446,6 +448,8 @@
                 observer.disconnect();
             });
         </script>
+        <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+        <script src="js/autocomplete.js"></script>
 </body>
 
 </html>
