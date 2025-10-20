@@ -15,9 +15,8 @@ Ce guide explique comment ajouter ou remplacer un fichier JSON dans la racine du
 
 ## ⬆️ Étape 2 – Importer le fichier
 
-1. Cliquez sur le bouton **Add file** (en haut à droite de la liste des fichiers).
+1. Cliquez sur le bouton **Add file** (en haut à droite de la liste des fichiers en vert).
 2. Choisissez **Upload files**.
-   *(Voir l’image ci-dessous pour repère visuel)*
 3. Glissez-déposez votre fichier JSON dans la zone prévue,
    ou cliquez sur **choose your files** pour le sélectionner manuellement.
 
