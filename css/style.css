@@ -1306,3 +1306,10 @@ Main Components
 .no-js .cd-dropdown-wrapper .cd-close {
   display: none;
 }
+
+/*limiter l'affichage des vidéos en mode ordinateur*/
+@media only screen and (min-width: 1024px) {
+  .cd-dropdown-content ul li.video-item:nth-of-type(n+11) {
+    display: none;
+  }
+}
