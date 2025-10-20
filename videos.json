@@ -1,6 +1,47 @@
 {
   "Étirements-mobilité": {
-    "Membre inférieur": [],
+    "Membre inférieur": [
+      {
+        "titre": "Etirement quadriceps et ischio-jambiers position assise",
+        "url": "https://www.youtube-nocookie.com/embed/-9bZFR4gV58"
+      },
+      {
+        "titre": "Etirement adducteurs",
+        "url": "https://www.youtube-nocookie.com/embed/20Ntb_J5GnU"
+      },
+      {
+        "titre": "Etirement pelvitrochantériens assis",
+        "url": "https://www.youtube-nocookie.com/embed/2UcbRcUt2yE"
+      },
+      {
+        "titre": "Etirement adducteurs couché",
+        "url": "https://www.youtube-nocookie.com/embed/E86M1R3ghZw"
+      },
+      {
+        "titre": "Etirement ischio-jambiers assis",
+        "url": "https://www.youtube-nocookie.com/embed/EyauawLtyQE"
+      },
+      {
+        "titre": "Etirement piriforme",
+        "url": "https://www.youtube-nocookie.com/embed/FiSx69MtE_M"
+      },
+      {
+        "titre": "Etirement quadriceps",
+        "url": "https://www.youtube-nocookie.com/embed/KpfPXYU_914"
+      },
+      {
+        "titre": "Etirement chaîne postérieure",
+        "url": "https://www.youtube-nocookie.com/embed/SNjmoljpAcQ"
+      },
+      {
+        "titre": "Etirement ischio-jambiers debout",
+        "url": "https://www.youtube-nocookie.com/embed/V5Q0j68_6K8"
+      },
+      {
+        "titre": "Etirement piriforme assis",
+        "url": "https://www.youtube-nocookie.com/embed/m2h2x2XL3nc"
+      }
+    ],
     "Membre supérieur": [],
     "Colonne": [
       {
@@ -63,4 +104,3 @@
     "Divers": []
   }
 }
-
