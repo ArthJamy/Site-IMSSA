@@ -20,9 +20,11 @@ html {
   /* Empêche la répétition de l'image */
   background-position: center;
   /* Centre l'image */
-  
-  height: auto;  /* la hauteur s'adapte au contenu */
-  min-height: 100%; /* au moins la taille du viewport */
+
+  height: auto;
+  /* la hauteur s'adapte au contenu */
+  min-height: 100%;
+  /* au moins la taille du viewport */
 }
 
 body {
@@ -31,7 +33,8 @@ body {
   color: #111433;
   background-color: #ffffff00;
 
-  height: auto;  /* la hauteur s'adapte au contenu */
+  height: auto;
+  /* la hauteur s'adapte au contenu */
   min-height: 100%;
 }
 
@@ -130,7 +133,7 @@ Main Components
   font-size: 1.2rem;
   color: #666;
   margin: 1.5rem;
-  
+
 }
 
 
@@ -196,18 +199,19 @@ Main Components
 }
 
 @media only screen and (min-width: 1024px) {
-  .navbar-btn{
-      padding: 0 36px 0 20px;
+  .navbar-btn {
+    padding: 0 36px 0 20px;
   }
+
   #btn-fav::after {
     content: " Mes favoris";
- 
+
   }
 
   .cd-dropdown-trigger {
     font-size: 1.5rem;
   }
-  
+
   .cd-dropdown-trigger.dropdown-is-active {
     background-color: #111433;
   }
@@ -732,7 +736,10 @@ Main Components
     -o-transform: translateX(0);
     transform: translateX(0);
     left: 100%;
-    height: auto;
+    height: auto; 
+    max-height: 80vh;
+    overflow-y: auto; /* affiche une barre de défilement verticale si besoin */
+    overscroll-behavior: contain; /* évite de scroller la page en même temps */
     background-color: #ffffff;
     box-shadow: 0 2px 14px rgba(0, 0, 0, 0.1);
   }
@@ -800,6 +807,7 @@ Main Components
   .cd-dropdown-content .cd-secondary-dropdown>.see-all a,
   .cd-dropdown-content .cd-dropdown-gallery>.see-all a,
   .cd-dropdown-content .cd-dropdown-icons>.see-all a {
+    
     margin: 0;
     height: 100%;
     line-height: 45px;
@@ -843,9 +851,11 @@ Main Components
   }
 
   .cd-dropdown-content .cd-secondary-dropdown {
-    overflow: hidden;
     width: 550px;
     padding-bottom: 65px;
+    overflow-y: auto !important;
+    overflow-x: hidden;
+    max-height: 80vh;
   }
 
   .cd-dropdown-content .cd-secondary-dropdown::before {
@@ -947,6 +957,7 @@ Main Components
     bottom: 0;
     left: 0;
     width: 100%;
+
   }
 
   .cd-dropdown-content .cd-dropdown-gallery {
@@ -1311,5 +1322,17 @@ Main Components
 @media only screen and (min-width: 1024px) {
   .cd-dropdown-content ul li.video-item:nth-of-type(n+11) {
     display: none;
+  }
+}
+
+
+
+/* Masquer le bouton "see-all" si l'écran est trop bas mais large (bureau) */
+@media screen and (min-width: 1024px) and (max-height: 800px) {
+  .cd-dropdown-content .cd-secondary-dropdown > .see-all {
+    display: none !important;
+  }
+    .cd-dropdown-content .cd-secondary-dropdown {
+    padding-bottom: 0px!important;
   }
 }
