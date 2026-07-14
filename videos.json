@@ -119,10 +119,6 @@
       {
         "titre": "Positions squat",
         "url": "https://www.youtube-nocookie.com/embed/c5RMY5ekt70"
-      },
-      {
-        "titre": "Coordination membres inférieurs",
-        "url": "https://www.youtube-nocookie.com/embed/0XjG4v_em0I"
       }
     ],
     "Membre supérieur": [
@@ -153,11 +149,6 @@
     ]
   },
   "Autre": {
-    "Divers": [
-      {
-        "titre": "Dissociation et proprioception membre inférieur",
-        "url": "https://www.youtube-nocookie.com/embed/QB6mSZQlu5M"
-      }
-    ]
+    "Divers": []
   }
 }
